@@ -35,4 +35,10 @@ public class User {
     @NotEmpty(message = "The password must not be empty!")
     @Size(min = 8, message = "The password length must consist of at least 8 characters.")
     private String password;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean emailVerified;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private EmailVerificationToken emailVerificationToken;
 }
