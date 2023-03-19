@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .antMatchers("/api/user/register", "/api/user/verify").permitAll() // Allow anonymous access to "/api/user/register"
+            .antMatchers("/api/user/register", "/api/user/verify").permitAll()
             .anyRequest().authenticated() // Require authentication for all other requests
             .and()
             .csrf().disable() // Disable CSRF protection for simplicity

@@ -12,11 +12,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
 @Service
 public class EmailVerificationService {
+    private final int TOKEN_EXPIRATION_TIME_IN_MINUTES = 30;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final JavaMailSender mailSender;
     private final ApplicationEventPublisher eventPublisher;
@@ -37,7 +39,7 @@ public class EmailVerificationService {
         return savedToken;
     }
 
-    public void sendVerificationToken(User user) {
+    public void createAndSendVerificationToken(User user) {
         EmailVerificationToken token = createToken(user);
         emailVerificationTokenRepository.save(token);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -51,20 +53,24 @@ public class EmailVerificationService {
         EmailVerificationToken token = new EmailVerificationToken();
         token.setUser(user);
         token.setToken(UUID.randomUUID().toString());
-        token.setExpiryDateTime(LocalDateTime.now().plusMinutes(30));
+        token.setExpiryDateTime(LocalDateTime.now().plusMinutes(TOKEN_EXPIRATION_TIME_IN_MINUTES));
         return token;
     }
 
     private String createEmailText(User user, String token) {
         return "Dear " + user.getFirstName() + ",\n" +
                 "Please click the following link to verify your email at Trading Simulator: " +
-                "http://localhost:8080/api/user/verify?token=" + token + " (it expires in 30 minutes).\n\n" +
-                "Kind regards,\nTrading Simulator";
+                "http://localhost:8080/api/user/verify?token=" + token + " (it expires in " +
+                TOKEN_EXPIRATION_TIME_IN_MINUTES + " minutes).\n\nKind regards,\nTrading Simulator";
     }
 
     @EventListener
     public void sendEmailForVerification(SimpleMailMessage mailMessage) {
         System.out.println("[" + LocalDateTime.now() + "] Sending a verification email to: " + Arrays.toString(mailMessage.getTo()));
         mailSender.send(mailMessage);
+    }
+
+    public List<EmailVerificationToken> getAllTokensToBeRemoved() {
+        return emailVerificationTokenRepository.findAllByExpiryDateTimeBefore(LocalDateTime.now().minusDays(10));
     }
 }
