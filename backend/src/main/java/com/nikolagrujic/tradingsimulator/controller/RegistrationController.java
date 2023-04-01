@@ -32,7 +32,7 @@ public class RegistrationController {
             return ResponseEntity.status(201).build(); // Created
         } catch (UserAlreadyExistsException e) {
             LOGGER.error("User {} already exists", user.getEmail());
-            return ResponseEntity.status(409).body(new ErrorResponse(e.getMessage())); // Conflict
+            return ResponseEntity.status(409).body(new ErrorResponse(e.getMessage()));
         }
     }
 
@@ -41,7 +41,7 @@ public class RegistrationController {
         try {
             LOGGER.info("Verifying user with token: " + token);
             userService.verifyUser(token);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("<h2>User verified successfully!</h2>");
         } catch (InvalidTokenException e) {
             LOGGER.error("The token is invalid: {}", token);
             return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));
