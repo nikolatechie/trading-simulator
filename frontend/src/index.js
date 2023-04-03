@@ -7,20 +7,30 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import ErrorPage from "./error-page";
 import RegisterPage from "./routes/register";
+import EmailVerificationPage from "./routes/email-verification-page";
 import LoginPage from "./routes/login";
+import LandingPage from "./routes/landing-page";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>Default page</div>,
+    element: <LandingPage />,
   },
   {
     path: "/register",
     element: <RegisterPage />,
   },
   {
+    path: "/verify-email",
+    element: <EmailVerificationPage />,
+  },
+  {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <div>Dashboard</div>,
   },
   {
     path: "*",
@@ -29,7 +39,5 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <RouterProvider router={router} />
 );

@@ -74,7 +74,7 @@ public class EmailVerificationService {
     private String createEmailText(User user, String token) {
         return "Dear " + user.getFirstName() + ",\n" +
                 "Please click the following link to verify your email at Trading Simulator: " +
-                "http://localhost:8080" + Constants.CONTEXT_PATH + Constants.VERIFY_EMAIL_PATH +
+                "http://localhost:3000" + Constants.VERIFY_EMAIL_PATH +
                 "?token=" + token + " (it expires in " + Constants.EMAIL_TOKEN_EXPIRATION_MINUTES +
                 " minutes).\n\nKind regards,\nTrading Simulator";
     }

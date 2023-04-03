@@ -41,7 +41,7 @@ public class RegistrationController {
         try {
             LOGGER.info("Verifying user with token: " + token);
             userService.verifyUser(token);
-            return ResponseEntity.ok().body("<h2>User verified successfully!</h2>");
+            return ResponseEntity.ok().build();
         } catch (InvalidTokenException e) {
             LOGGER.error("The token is invalid: {}", token);
             return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));

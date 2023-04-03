@@ -9,10 +9,16 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import { CircularProgress } from "@mui/material";
+import { blue } from "@mui/material/colors";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
     const data = new FormData(event.currentTarget);
     fetch("http://localhost:8080/api/register", {
       method: "POST",
@@ -27,6 +33,7 @@ export default function RegisterPage() {
       }),
     })
       .then((res) => {
+        setLoading(false);
         if (res.ok) {
           window.location.href = "/login";
         } else {
@@ -128,14 +135,30 @@ export default function RegisterPage() {
                 />
               </Grid>
             </Grid>
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Register
-            </Button>
+            <Box sx={{ m: 1, position: "relative" }}>
+              <Button
+                type='submit'
+                disabled={loading}
+                fullWidth
+                variant='contained'
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Register
+              </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    color: blue[500],
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: "-12px",
+                    marginLeft: "-12px",
+                  }}
+                />
+              )}
+            </Box>
             <Grid container justifyContent='flex-end'>
               <Grid item>
                 <Link href='/login' variant='body2'>
