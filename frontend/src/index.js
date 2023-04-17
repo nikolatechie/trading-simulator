@@ -5,11 +5,13 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import ErrorPage from "./error-page";
+import ErrorPage from "./routes/error-page";
 import RegisterPage from "./routes/register";
 import EmailVerificationPage from "./routes/email-verification-page";
 import LoginPage from "./routes/login";
 import LandingPage from "./routes/landing-page";
+import App from "./routes/app";
+import ProtectedRoute from "./routes/protected-route";
 
 const router = createBrowserRouter([
   {
@@ -29,8 +31,12 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: "/dashboard",
-    element: <div>Dashboard</div>,
+    path: "/app",
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "*",

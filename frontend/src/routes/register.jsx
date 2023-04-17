@@ -11,9 +11,11 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { CircularProgress } from "@mui/material";
 import { blue } from "@mui/material/colors";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (event) => {
@@ -35,7 +37,7 @@ export default function RegisterPage() {
       .then((res) => {
         setLoading(false);
         if (res.ok) {
-          window.location.href = "/login";
+          navigate("/login");
         } else {
           res.json().then((data) => {
             if (data.errorMessage) alert(data.errorMessage);

@@ -1,10 +1,13 @@
 import React from "react";
 import { Typography, Button, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function ErrorPage() {
+  const navigate = useNavigate();
+
   const handleBackToHome = () => {
     // Redirect the user back to the home page
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (

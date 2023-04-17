@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import { CssBaseline } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   appBar: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   const classes = useStyles();
 
   return (
@@ -34,16 +36,10 @@ export default function LandingPage() {
           <Typography variant='h6' sx={{ flexGrow: 1 }}>
             Trading Simulator
           </Typography>
-          <Button
-            color='inherit'
-            onClick={() => (window.location.href = "/login")}
-          >
+          <Button color='inherit' onClick={() => navigate("/login")}>
             Login
           </Button>
-          <Button
-            color='inherit'
-            onClick={() => (window.location.href = "/register")}
-          >
+          <Button color='inherit' onClick={() => navigate("/register")}>
             Register
           </Button>
         </Toolbar>
@@ -63,7 +59,7 @@ export default function LandingPage() {
           <Button
             variant='contained'
             sx={{ marginRight: "0.5rem" }}
-            onClick={() => (window.location.href = "/register")}
+            onClick={() => navigate("/register")}
           >
             Register for free
           </Button>
