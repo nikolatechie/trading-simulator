@@ -27,7 +27,7 @@ const AppBarStyled = styled(MuiAppBar, {
   }),
 }));
 
-export const AppBar = (props) => {
+export const AppBar = React.memo((props) => {
   return (
     <AppBarStyled position='absolute' open={props.open}>
       <Toolbar
@@ -64,4 +64,4 @@ export const AppBar = (props) => {
       </Toolbar>
     </AppBarStyled>
   );
-};
+});

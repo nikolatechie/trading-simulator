@@ -6,3 +6,5 @@ export const drawerMainListItems = [
   "News",
   "Transactions",
 ];
+
+export const drawerSecondaryListItems = ["Settings", "Sign out"];

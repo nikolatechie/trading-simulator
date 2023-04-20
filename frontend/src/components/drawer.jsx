@@ -6,7 +6,10 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { drawerMainListItems } from "../data/drawer-list-items.js";
+import {
+  drawerMainListItems,
+  drawerSecondaryListItems,
+} from "../data/drawer-list-items.js";
 import { DrawerListItem } from "../components/drawer-list-item.jsx";
 import { Toolbar } from "@mui/material";
 
@@ -36,7 +39,7 @@ const DrawerStyled = styled(MuiDrawer, {
   },
 }));
 
-export const Drawer = (props) => {
+export const Drawer = React.memo((props) => {
   return (
     <DrawerStyled variant='permanent' open={props.open}>
       <Toolbar
@@ -53,14 +56,24 @@ export const Drawer = (props) => {
       </Toolbar>
       <Divider />
       <List component='nav'>
-        {drawerMainListItems.map((item) => (
+        {drawerMainListItems.map((item, index) => (
           <DrawerListItem
+            key={index}
             name={item}
             handleSelectPage={props.handleSelectPage}
           />
         ))}
-        <Divider sx={{ my: 1 }} />
+      </List>
+      <Divider sx={{ my: 1 }} />
+      <List component='nav' sx={{ mt: "auto" }}>
+        {drawerSecondaryListItems.map((item, index) => (
+          <DrawerListItem
+            key={index}
+            name={item}
+            handleSelectPage={props.handleSelectPage}
+          />
+        ))}
       </List>
     </DrawerStyled>
   );
-};
+});

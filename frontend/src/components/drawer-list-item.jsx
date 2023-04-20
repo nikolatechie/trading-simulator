@@ -8,6 +8,8 @@ import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import WalletIcon from "@mui/icons-material/Wallet";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const iconMap = {
   Dashboard: <DashboardIcon />,
@@ -16,6 +18,8 @@ const iconMap = {
   Trade: <SwapHorizIcon />,
   News: <FeedIcon />,
   Transactions: <CurrencyExchangeIcon />,
+  Settings: <SettingsIcon />,
+  "Sign out": <LogoutIcon />,
 };
 
 export const DrawerListItem = (props) => {

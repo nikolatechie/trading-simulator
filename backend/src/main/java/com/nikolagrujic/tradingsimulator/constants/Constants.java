@@ -10,4 +10,7 @@ public class Constants {
     // Tokens
     public static final int EMAIL_TOKEN_EXPIRATION_MINUTES = 30;
     public static final int JWT_EXPIRATION_DAYS = 10;
+
+    // Timers
+    public static final long REQUEST_DELAY_MILLISECONDS = 2000;
 }

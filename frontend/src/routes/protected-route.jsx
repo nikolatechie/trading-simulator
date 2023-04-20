@@ -1,11 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-
-const isAuth = () => {
-  const jwt = localStorage.getItem("jwt");
-  return jwt === null ? false : true;
-};
+import { isUserAuthenticated } from "../auth/auth.js";
 
 export default function ProtectedRoute({ children }) {
-  return isAuth() ? children : <Navigate to='/login' replace />;
+  return isUserAuthenticated() ? children : <Navigate to='/login' replace />;
 }

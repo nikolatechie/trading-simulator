@@ -8,6 +8,8 @@ import { CssBaseline } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
+import { isUserAuthenticated } from "../auth/auth.js";
+import { Navigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => ({
   appBar: {
@@ -25,6 +27,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function LandingPage() {
+  if (isUserAuthenticated()) return <Navigate to='/app' replace />;
   const navigate = useNavigate();
   const classes = useStyles();
 

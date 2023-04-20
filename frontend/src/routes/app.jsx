@@ -3,24 +3,29 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { AppBar } from "../components/app-bar.jsx";
 import { Drawer } from "../components/drawer.jsx";
 import { AppContent } from "../components/app-content.jsx";
+import { useNavigate } from "react-router-dom";
 
 const mdTheme = createTheme();
 
 export default function App() {
   const [open, setOpen] = useState(true);
   const [selectedPage, setSelectedPage] = useState("Dashboard");
+  const navigate = useNavigate();
 
-  const toggleDrawer = () => {
+  const toggleDrawer = useCallback(() => {
     setOpen(!open);
-  };
+  }, [open]);
 
-  const handleSelectPage = (page) => {
-    setSelectedPage(page);
-  };
+  const handleSelectPage = useCallback((page) => {
+    if (page === "Sign out") {
+      localStorage.removeItem("jwt");
+      navigate("/");
+    } else setSelectedPage(page);
+  }, []);
 
   return (
     <ThemeProvider theme={mdTheme}>
