@@ -1,5 +1,7 @@
 export const DRAWER_WIDTH = 240;
 
+export const PAGE_SIZE = 10;
+
 export const MONTHS_SHORT = [
   "null",
   "Jan",
@@ -17,8 +19,9 @@ export const MONTHS_SHORT = [
 ];
 
 export const ActionTypes = {
-  FETCH_REQUEST: "FETCH_REQUEST",
+  FETCH_START: "FETCH_START",
   FETCH_SUCCESS: "FETCH_SUCCESS",
   FETCH_FAILURE: "FETCH_FAILURE",
   INCREMENT_PAGE: "INCREMENT_PAGE",
+  SET_PAGE: "SET_PAGE",
 };

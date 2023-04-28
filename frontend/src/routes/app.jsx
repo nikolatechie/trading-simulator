@@ -8,6 +8,7 @@ import { AppBar } from "../components/app-bar.jsx";
 import { Drawer } from "../components/drawer.jsx";
 import { AppContent } from "../components/app-content.jsx";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "../auth/auth.js";
 
 const mdTheme = createTheme();
 
@@ -21,10 +22,8 @@ export default function App() {
   }, [open]);
 
   const handleSelectPage = useCallback((page) => {
-    if (page === "Sign out") {
-      localStorage.removeItem("jwt");
-      navigate("/");
-    } else setSelectedPage(page);
+    if (page === "Sign out") signOut(navigate);
+    else setSelectedPage(page);
   }, []);
 
   return (

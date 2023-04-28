@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 
 public interface NewsRepository extends JpaRepository<NewsArticle, Long> {
     boolean existsByTitle(String title);
-
     @Transactional
     void deleteAllByPublishedAtBefore(LocalDateTime publishedAt);
-
     Page<NewsArticle> findAll(Pageable pageable);
 }

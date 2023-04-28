@@ -23,7 +23,7 @@ import java.util.Collections;
 @SuppressWarnings("deprecation")
 @EnableWebSecurity
 @AllArgsConstructor
-@Import(PasswordEncoderConfig.class)
+@Import({PasswordEncoderConfig.class, TaskExecutorConfig.class})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final JwtAuthFilter jwtAuthFilter;

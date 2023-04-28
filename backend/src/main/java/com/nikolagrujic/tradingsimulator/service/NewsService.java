@@ -54,14 +54,12 @@ public class NewsService {
             ResponseEntity<NewsListResponse> responseEntity =
                     restTemplate.exchange(requestEntity, NewsListResponse.class);
 
-            int articlesRetrieved = 0;
             if (responseEntity.hasBody() &&
                     Objects.requireNonNull(responseEntity.getBody()).getArticles().size() > 0) {
-                articlesRetrieved = responseEntity.getBody().getArticles().size();
+                List<NewsArticle> newsArticles = responseEntity.getBody().getArticles();
+                LOGGER.info("Successfully retrieved a list of {} news articles.", newsArticles.size());
                 saveNewsArticles(responseEntity.getBody().getArticles());
             }
-
-            LOGGER.info("Successfully retrieved a list of {} news articles.", articlesRetrieved);
         } catch (RestClientException e) {
             LOGGER.error("Couldn't retrieve news articles: {}", e.getMessage());
         }
@@ -69,15 +67,18 @@ public class NewsService {
 
     private void saveNewsArticles(List<NewsArticle> newsArticles) {
         LOGGER.info("Saving news articles in the database...");
+        int invalidNews = 0;
         for (NewsArticle article: newsArticles) {
             try {
                 if (!newsRepository.existsByTitle(article.getTitle())) {
                     newsRepository.save(article);
                 }
             } catch (Exception e) {
-                LOGGER.error("Couldn't save the article with title {}\n{}", article.getTitle(), e.getMessage());
+                ++invalidNews;
             }
         }
+        if (invalidNews > 0)
+            LOGGER.warn("Number of invalid news articles: {}", invalidNews);
     }
 
     private static String getDateFrom() {

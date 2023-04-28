@@ -11,7 +11,7 @@ import EmailVerificationPage from "./routes/email-verification-page";
 import LoginPage from "./routes/login";
 import LandingPage from "./routes/landing-page";
 import App from "./routes/app";
-import ProtectedRoute from "./routes/protected-route";
+import { ProtectedRoute } from "./routes/protected-route";
 
 const router = createBrowserRouter([
   {

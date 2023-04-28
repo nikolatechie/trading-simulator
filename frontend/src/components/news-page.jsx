@@ -1,18 +1,19 @@
 import React, { useEffect, useReducer } from "react";
 import { ArticleCard } from "./article-card";
-import { Box, CircularProgress } from "@mui/material";
+import { Alert, Box, CircularProgress } from "@mui/material";
 import { ActionTypes } from "../data/constants";
 
 const initialState = {
   articles: [],
-  page: -1,
+  page: 0,
   isLoading: false,
   hasMore: true,
+  canFetchArticles: true,
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case ActionTypes.FETCH_REQUEST:
+    case ActionTypes.FETCH_START:
       return { ...state, isLoading: true };
     case ActionTypes.FETCH_SUCCESS:
       return {
@@ -25,6 +26,7 @@ function reducer(state, action) {
       return {
         ...state,
         isLoading: false,
+        canFetchArticles: false,
       };
     case ActionTypes.INCREMENT_PAGE:
       return {
@@ -41,11 +43,11 @@ export default function NewsPage() {
 
   useEffect(() => {
     const fetchNewsArticles = async () => {
-      dispatch({ type: ActionTypes.FETCH_REQUEST });
+      dispatch({ type: ActionTypes.FETCH_START });
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          `http://localhost:8080/api/news?page=${state.page}&size=10`,
+          `http://localhost:8080/api/news?page=${state.page}`,
           {
             method: "GET",
             headers: {
@@ -64,10 +66,9 @@ export default function NewsPage() {
       } catch (err) {
         console.log(err);
         dispatch({ type: ActionTypes.FETCH_FAILURE });
-        alert("Couldn't fetch news articles. Please try again later.");
       }
     };
-    if (state.page >= 0) fetchNewsArticles();
+    fetchNewsArticles();
   }, [state.page]);
 
   useEffect(() => {
@@ -78,7 +79,12 @@ export default function NewsPage() {
     };
 
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && state.hasMore) {
+      if (
+        entry.isIntersecting &&
+        state.hasMore &&
+        !state.isLoading &&
+        state.canFetchArticles
+      ) {
         dispatch({ type: ActionTypes.INCREMENT_PAGE });
       }
     }, options);
@@ -88,7 +94,7 @@ export default function NewsPage() {
     return () => {
       observer.disconnect();
     };
-  }, [state.hasMore]);
+  }, [state.hasMore, state.isLoading]);
 
   return (
     <Box
@@ -102,6 +108,11 @@ export default function NewsPage() {
       {state.articles.map((article) => (
         <ArticleCard key={article.id} article={article} />
       ))}
+      {!state.canFetchArticles && (
+        <Alert severity='error'>
+          Couldn't fetch news articles. Please try again later.
+        </Alert>
+      )}
       <div id='bottom-of-list' />
       {state.isLoading && <CircularProgress sx={{ mt: 2 }} />}
     </Box>

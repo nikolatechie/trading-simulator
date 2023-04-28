@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class NewsListResponse {
-    private List<NewsArticle> articles;
+public class StocksListResponse {
+    private List<StockInfo> data;
 }
