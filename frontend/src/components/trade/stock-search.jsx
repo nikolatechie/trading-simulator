@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useReducer } from "react";
 import { makeStyles } from "@mui/styles";
-import { Alert, Button, TableContainer } from "@mui/material";
 import {
+  Alert,
+  Button,
   Box,
   Table,
+  TableContainer,
   TableHead,
   TableBody,
   TableRow,
@@ -13,8 +15,8 @@ import {
   Pagination,
   CircularProgress,
 } from "@mui/material";
-import { PAGE_SIZE } from "../data/constants";
-import { ActionTypes } from "../data/constants";
+import { PAGE_SIZE, ActionTypes } from "../../data/constants";
+import { reducer, initialState, columns } from "./helpers/stock-search-helpers";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -31,61 +33,16 @@ const useStyles = makeStyles((theme) => ({
   },
   tableRow: {
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: "#fafafa",
     },
     "&:hover": {
       backgroundColor: theme.palette.action.hover,
+      cursor: "pointer",
     },
   },
 }));
 
-const columns = [
-  { headerName: "#" },
-  { field: "symbol", headerName: "Symbol" },
-  { field: "name", headerName: "Name" },
-  { field: "exchange", headerName: "Exchange" },
-  { field: "country", headerName: "Country" },
-  { field: "currency", headerName: "Currency" },
-  { field: "mic_code", headerName: "MIC" },
-];
-
-const initialState = {
-  stocks: [],
-  page: 0,
-  totalPages: 1,
-  canFetchStocks: true,
-  isFetching: false,
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case ActionTypes.FETCH_START:
-      return { ...state, isFetching: true };
-    case ActionTypes.FETCH_SUCCESS:
-      return {
-        ...state,
-        isFetching: false,
-        canFetchStocks: true,
-        totalPages: action.payload.totalPages,
-        stocks: action.payload.content,
-      };
-    case ActionTypes.FETCH_FAILURE:
-      return {
-        ...state,
-        canFetchStocks: false,
-        isFetching: false,
-      };
-    case ActionTypes.SET_PAGE:
-      return {
-        ...state,
-        page: action.payload,
-      };
-    default:
-      throw new Error("Invalid reducer action type:", action.type);
-  }
-}
-
-export default function StockSearch() {
+export default function StockSearch(props) {
   const classes = useStyles();
   const [state, dispatch] = useReducer(reducer, initialState);
   const searchTerm = useRef("");
@@ -169,7 +126,18 @@ export default function StockSearch() {
           </TableHead>
           <TableBody>
             {state.stocks.map((row, index) => (
-              <TableRow key={row.id} className={classes.tableRow}>
+              <TableRow
+                key={row.id}
+                className={classes.tableRow}
+                onClick={() =>
+                  props.handleSelectStock({
+                    symbol: row.symbol,
+                    name: row.name,
+                    exchange: row.exchange,
+                    currency: row.currency,
+                  })
+                }
+              >
                 <TableCell>{PAGE_SIZE * state.page + index + 1}</TableCell>
                 {columns.slice(1).map((column) => (
                   <TableCell key={column.field}>{row[column.field]}</TableCell>

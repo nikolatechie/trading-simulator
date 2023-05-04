@@ -4,7 +4,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import FeedIcon from "@mui/icons-material/Feed";
-import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import WalletIcon from "@mui/icons-material/Wallet";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -13,9 +12,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 const iconMap = {
   Dashboard: <DashboardIcon />,
-  Research: <QueryStatsIcon />,
   Portfolio: <WalletIcon />,
-  Trade: <SwapHorizIcon />,
+  Trade: <QueryStatsIcon />,
   News: <FeedIcon />,
   Transactions: <CurrencyExchangeIcon />,
   Settings: <SettingsIcon />,

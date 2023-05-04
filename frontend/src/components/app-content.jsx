@@ -1,6 +1,6 @@
 import React from "react";
 import NewsPage from "./news-page";
-import { TradePage } from "./trade-page";
+import TradePage from "./trade/trade-page";
 
 export const AppContent = React.memo((props) => {
   switch (props.selectedPage) {

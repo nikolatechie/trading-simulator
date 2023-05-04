@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { useState, useCallback } from "react";
 import { AppBar } from "../components/app-bar.jsx";
-import { Drawer } from "../components/drawer.jsx";
+import { Drawer } from "../components/drawer/drawer.jsx";
 import { AppContent } from "../components/app-content.jsx";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "../auth/auth.js";

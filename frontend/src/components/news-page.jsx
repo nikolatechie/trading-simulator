@@ -11,7 +11,7 @@ const initialState = {
   canFetchArticles: true,
 };
 
-function reducer(state, action) {
+const reducer = (state, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_START:
       return { ...state, isLoading: true };
@@ -36,7 +36,7 @@ function reducer(state, action) {
     default:
       throw new Error("Invalid reducer action type:", action.type);
   }
-}
+};
 
 export default function NewsPage() {
   const [state, dispatch] = useReducer(reducer, initialState);

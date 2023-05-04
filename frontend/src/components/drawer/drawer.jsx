@@ -1,7 +1,7 @@
 import React from "react";
 import MuiDrawer from "@mui/material/Drawer";
 import { styled } from "@mui/material/styles";
-import { DRAWER_WIDTH } from "../data/constants.js";
+import { DRAWER_WIDTH } from "../../data/constants.js";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -9,8 +9,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import {
   drawerMainListItems,
   drawerSecondaryListItems,
-} from "../data/drawer-list-items.js";
-import { DrawerListItem } from "../components/drawer-list-item.jsx";
+} from "../../data/drawer-list-items.js";
+import { DrawerListItem } from "./drawer-list-item.jsx";
 import { Toolbar } from "@mui/material";
 
 const DrawerStyled = styled(MuiDrawer, {
