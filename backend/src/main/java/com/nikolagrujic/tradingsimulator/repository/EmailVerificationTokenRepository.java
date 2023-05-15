@@ -10,4 +10,5 @@ import java.util.List;
 public interface EmailVerificationTokenRepository extends JpaRepository<EmailVerificationToken,Long> {
     EmailVerificationToken findByToken(String token);
     List<EmailVerificationToken> findAllByExpiryDateTimeBefore(LocalDateTime dateTime);
+    void deleteByUser_Id(Long user_id);
 }
