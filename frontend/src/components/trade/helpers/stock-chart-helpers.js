@@ -1,12 +1,12 @@
 import { MONTHS_SHORT } from "../../../data/constants";
-import { stockTimeRanges } from "../../../data/constants";
+import { StockTimeRanges } from "../../../data/constants";
 
 // Called after fetching data from the API
 // Formats data and returns it to set state
 export const formatFetchedHistoryData = (data, timeRange) => {
   const timeSeries = data["Time Series (Daily)"];
-  stockTimeRanges.MAX = Object.keys(timeSeries).length;
-  const days = stockTimeRanges[timeRange];
+  StockTimeRanges.MAX = Object.keys(timeSeries).length;
+  const days = StockTimeRanges[timeRange];
   const dates = Object.keys(timeSeries);
   const formattedData = dates.map((date) => ({
     dateLong: formatDateLong(date),

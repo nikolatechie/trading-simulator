@@ -21,16 +21,19 @@ import java.util.List;
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final PortfolioService portfolioService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailVerificationService emailVerificationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-                       EmailVerificationService emailVerificationService) {
+                       EmailVerificationService emailVerificationService,
+                       PortfolioService portfolioService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailVerificationService = emailVerificationService;
+        this.portfolioService = portfolioService;
     }
 
     @Transactional
@@ -42,6 +45,8 @@ public class UserService implements UserDetailsService {
         user.setEmailVerified(false);
         userRepository.save(user);
         LOGGER.info("User {} registered successfully", user.getEmail());
+        portfolioService.createUserPortfolio(user);
+        LOGGER.info("User portfolio has been created");
         emailVerificationService.createAndSendVerificationToken(user);
     }
 

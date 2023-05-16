@@ -18,4 +18,13 @@ public class Constants {
     public enum StockExchange {
         NASDAQ, NYSE
     }
+    public enum OrderAction {
+        Buy, Sell
+    }
+    public enum OrderType {
+        Market, Limit, Stop
+    }
+    public enum OrderDuration {
+        IOC, FOK, DAY, GTC
+    }
 }

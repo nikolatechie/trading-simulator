@@ -2,19 +2,29 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import StockSearch from "./stock-search";
 import StockDetails from "./stock-details";
+import { TradeForm } from "./form/trade-form";
 
-const initialState = {
+const initialStock = {
   symbol: null,
   name: null,
   exchange: null,
   currency: null,
 };
 
+const initialQuote = {
+  askPrice: null,
+};
+
 export default function TradePage() {
-  const [stock, setStock] = useState(initialState);
+  const [stock, setStock] = useState(initialStock);
+  const [quote, setQuote] = useState(initialQuote);
 
   const handleSelectStock = (stock) => {
     setStock(stock);
+  };
+
+  const handleFormatQuote = (quote) => {
+    setQuote(quote);
   };
 
   return (
@@ -26,7 +36,14 @@ export default function TradePage() {
       }}
     >
       <StockSearch handleSelectStock={handleSelectStock} />
-      <StockDetails stock={stock} />
+      <StockDetails stock={stock} handleFormatQuote={handleFormatQuote} />
+      {stock.symbol !== null && quote.askPrice !== null && (
+        <TradeForm
+          symbol={stock.symbol}
+          bidPrice={quote.bidPrice}
+          askPrice={quote.askPrice}
+        />
+      )}
     </Box>
   );
 }

@@ -26,7 +26,7 @@ export const ActionTypes = {
   SET_PAGE: "SET_PAGE",
 };
 
-export const stockTimeRanges = {
+export const StockTimeRanges = {
   "1D": 1,
   "5D": 5,
   "1M": 30,
@@ -34,4 +34,22 @@ export const stockTimeRanges = {
   "1Y": 365,
   "5Y": 1825,
   MAX: 1825,
+};
+
+export const StockOrderActions = {
+  BUY: "Buy",
+  SELL: "Sell",
+};
+
+export const StockOrderTypes = {
+  MARKET: "Market",
+  LIMIT: "Limit",
+  STOP: "Stop",
+};
+
+export const StockOrderDurations = {
+  DAY: "Day",
+  GTC: "Good 'Til Cancelled (GTC)",
+  IOC: "Immediate or Cancel (IOC)",
+  FOK: "Fill or Kill (FOK)",
 };

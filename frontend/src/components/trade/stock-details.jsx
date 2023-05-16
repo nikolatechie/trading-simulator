@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function StockDetails({ stock }) {
+export default function StockDetails({ stock, handleFormatQuote }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const alphaVantageApiKey = useRef(null);
   const twelveDataApiKey = useRef(null);
@@ -98,22 +98,24 @@ export default function StockDetails({ stock }) {
             logoUrl = data.url;
           }
           const price = parseFloat(quote["05. price"]);
+          const formattedQuote = {
+            open: parseFloat(quote["02. open"]),
+            high: parseFloat(quote["03. high"]),
+            low: parseFloat(quote["04. low"]),
+            price: price,
+            bidPrice: price - 0.01,
+            askPrice: price + 0.01,
+            volume: parseFloat(quote["06. volume"]),
+            prevClose: parseFloat(quote["08. previous close"]),
+            change: quote["09. change"],
+            changePercent: quote["10. change percent"],
+          };
           dispatch({
             type: ActionTypes.FETCH_SUCCESS,
-            quote: {
-              open: parseFloat(quote["02. open"]),
-              high: parseFloat(quote["03. high"]),
-              low: parseFloat(quote["04. low"]),
-              price: price,
-              bidPrice: price - 0.01,
-              askPrice: price + 0.01,
-              volume: parseFloat(quote["06. volume"]),
-              prevClose: parseFloat(quote["08. previous close"]),
-              change: quote["09. change"],
-              changePercent: quote["10. change percent"],
-            },
+            quote: formattedQuote,
             logoUrl: logoUrl,
           });
+          handleFormatQuote(formattedQuote);
         } else {
           dispatch({ type: ActionTypes.FETCH_FAILURE });
         }

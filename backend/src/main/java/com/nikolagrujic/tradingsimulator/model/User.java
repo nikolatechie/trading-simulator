@@ -1,12 +1,16 @@
 package com.nikolagrujic.tradingsimulator.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class User {
@@ -38,4 +42,7 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private EmailVerificationToken emailVerificationToken;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Portfolio portfolio;
 }

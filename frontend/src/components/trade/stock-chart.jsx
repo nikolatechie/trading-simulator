@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ButtonGroup, Button, Box, CircularProgress } from "@mui/material";
-import { stockTimeRanges } from "../../data/constants";
+import { StockTimeRanges } from "../../data/constants";
 import { CustomChartTooltip } from "./custom-chart-tooltip";
 import {
   formatFetchedHistoryData,
@@ -45,7 +45,7 @@ export default function StockChart(props) {
 
   const handleTimeRangeChange = (range) => {
     if (timeRange !== range) {
-      const days = stockTimeRanges[range];
+      const days = StockTimeRanges[range];
       const chart = extractDataForChart(priceHistory, days, range);
       setTimeRange(range);
       setChartData(chart);
@@ -56,7 +56,7 @@ export default function StockChart(props) {
     <>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <ButtonGroup variant='text'>
-          {Object.keys(stockTimeRanges).map((key, i) => (
+          {Object.keys(StockTimeRanges).map((key, i) => (
             <Button
               onClick={() => handleTimeRangeChange(key)}
               key={i}
