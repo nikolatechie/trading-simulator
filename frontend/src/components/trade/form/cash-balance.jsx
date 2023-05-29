@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { formatCash } from "../helpers/trade-form-helpers";
+import { formatCash } from "../../../helpers/trade-form-helpers";
 
 export const CashBalance = React.memo(({ cash }) => (
   <Box display='flex'>

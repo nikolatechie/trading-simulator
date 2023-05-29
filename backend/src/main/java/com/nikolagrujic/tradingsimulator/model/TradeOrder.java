@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class TradeOrder {
     private String symbol;
+    private String name;
     private Constants.OrderAction action;
     private int quantity;
     private Constants.OrderType type;
@@ -21,9 +22,10 @@ public class TradeOrder {
 
     @Override
     public String toString() {
-        return
-            "TradeOrder{" +
-            "action=" + action +
+        return "TradeOrder{" +
+            "symbol='" + symbol + '\'' +
+            ", name='" + name + '\'' +
+            ", action=" + action +
             ", quantity=" + quantity +
             ", type=" + type +
             ", price=" + price +

@@ -1,8 +1,11 @@
 package com.nikolagrujic.tradingsimulator.service;
 
+import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.constants.Constants.StockExchange;
+import com.nikolagrujic.tradingsimulator.model.PriceResponse;
 import com.nikolagrujic.tradingsimulator.model.StockInfo;
 import com.nikolagrujic.tradingsimulator.model.StocksListResponse;
+import com.nikolagrujic.tradingsimulator.model.TradeOrder;
 import com.nikolagrujic.tradingsimulator.repository.StockInfoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,24 +19,31 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
 @Service
-public class StocksService {
+public class StockService {
     @Value("${twelvedata.api.key}")
     private String apiKey;
     @Value("${twelvedata.api.host}")
     private String apiHost;
     private static final String STOCKS_ENDPOINT = "https://twelve-data1.p.rapidapi.com/stocks";
+    private static final String PRICE_ENDPOINT = "https://twelve-data1.p.rapidapi.com/price";
     private final RestTemplate restTemplate = new RestTemplate();
     private final StockInfoRepository stockInfoRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(StocksService.class);
+    private static final BigDecimal PRICE_TICK = new BigDecimal("0.01");
+    private static final Logger LOGGER = LoggerFactory.getLogger(StockService.class);
 
     @Autowired
-    public StocksService(StockInfoRepository stockInfoRepository) {
+    public StockService(StockInfoRepository stockInfoRepository) {
         this.stockInfoRepository = stockInfoRepository;
+    }
+
+    public boolean existsBySymbol(String symbol) {
+        return stockInfoRepository.existsBySymbol(symbol);
     }
 
     public Page<StockInfo> getListOfStockInfo(String search, Pageable pageable) {
@@ -89,5 +99,40 @@ public class StocksService {
                 LOGGER.error("Couldn't retrieve stocks data: {}", e.getMessage());
             }
         }
+    }
+
+    private BigDecimal fetchPrice(String symbol) throws Exception {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("X-RapidAPI-Key", apiKey);
+            headers.add("X-RapidAPI-Host", apiHost);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            RequestEntity<?> requestEntity = new RequestEntity<>(
+                    headers,
+                    HttpMethod.GET,
+                    URI.create(PRICE_ENDPOINT + "?symbol=" + symbol)
+            );
+            ResponseEntity<PriceResponse> responseEntity =
+                    restTemplate.exchange(requestEntity, PriceResponse.class);
+
+            if (responseEntity.hasBody() && responseEntity.getBody() != null) {
+                return new BigDecimal(responseEntity.getBody().getPrice());
+            }
+        } catch (RestClientException e) {
+            LOGGER.error("Couldn't retrieve the stock price: {}", e.getMessage());
+        }
+        throw new Exception("Couldn't fetch the current stock price.");
+    }
+
+    public BigDecimal getTotalPrice(TradeOrder tradeOrder) throws Exception {
+        BigDecimal price = fetchPrice(tradeOrder.getSymbol());
+
+        if (tradeOrder.getAction().equals(Constants.OrderAction.Buy)) {
+            price = price.add(PRICE_TICK);
+        } else if (tradeOrder.getAction().equals(Constants.OrderAction.Sell)) {
+            price = price.subtract(PRICE_TICK);
+        }
+
+        return price.multiply(BigDecimal.valueOf(tradeOrder.getQuantity()));
     }
 }

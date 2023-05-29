@@ -36,7 +36,7 @@ public class NewsController {
             LOGGER.info("Retrieving news articles...");
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
             Page<NewsArticle> articles = newsService.getNewsArticles(pageable);
-            return ResponseEntity.ok().body(articles);
+            return ResponseEntity.ok(articles);
         } catch (Exception e) {
             LOGGER.error("Couldn't retrieve news articles: {}", e.getMessage());
             return ResponseEntity.status(500).body(

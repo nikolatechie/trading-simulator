@@ -5,64 +5,51 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.exception.InvalidOrderException;
 import com.nikolagrujic.tradingsimulator.model.Portfolio;
-import com.nikolagrujic.tradingsimulator.model.PriceResponse;
 import com.nikolagrujic.tradingsimulator.model.StockHolding;
 import com.nikolagrujic.tradingsimulator.model.TradeOrder;
-import com.nikolagrujic.tradingsimulator.repository.PortfolioRepository;
 import com.nikolagrujic.tradingsimulator.repository.StockHoldingRepository;
+import com.nikolagrujic.tradingsimulator.service.PortfolioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
-import java.net.URI;
 import java.time.LocalDateTime;
 
 @Component
 public class MarketOrderExecutionStrategy implements OrderExecutionStrategy {
-    @Value("${twelvedata.api.key}")
-    private String apiKey;
-    @Value("${twelvedata.api.host}")
-    private String apiHost;
-    private static final String PRICE_ENDPOINT = "https://twelve-data1.p.rapidapi.com/price";
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final PortfolioRepository portfolioRepository;
+    private final PortfolioService portfolioService;
     private final StockHoldingRepository stockHoldingRepository;
     private final ObjectMapper objectMapper;
-    private static final BigDecimal PRICE_TICK = new BigDecimal("0.01");
     private static final Logger LOGGER = LoggerFactory.getLogger(MarketOrderExecutionStrategy.class);
 
     @Autowired
     public MarketOrderExecutionStrategy(
-            PortfolioRepository portfolioRepository,
+            PortfolioService portfolioService,
             StockHoldingRepository stockHoldingRepository,
             ObjectMapper objectMapper) {
-        this.portfolioRepository = portfolioRepository;
+        this.portfolioService = portfolioService;
         this.stockHoldingRepository = stockHoldingRepository;
         this.objectMapper = objectMapper;
     }
 
     @Override
-    public ObjectNode executeOrder(String email, TradeOrder tradeOrder) throws Exception {
+    public ObjectNode executeOrder(String email, TradeOrder tradeOrder, BigDecimal totalPrice) {
         ObjectNode objectNode = objectMapper.createObjectNode();
         if (tradeOrder.getAction().equals(Constants.OrderAction.Buy))
-            objectNode.put("cash", executeBuyOrder(email, tradeOrder));
+            objectNode.put("cash", executeBuyOrder(email, tradeOrder, totalPrice));
         else if (tradeOrder.getAction().equals(Constants.OrderAction.Sell))
-            objectNode.put("cash", executeSellOrder(email, tradeOrder));
+            objectNode.put("cash", executeSellOrder(email, tradeOrder, totalPrice));
         else
             throw new InvalidOrderException(tradeOrder.getAction() + " is an invalid action.");
 
         return objectNode;
     }
 
-    private BigDecimal executeBuyOrder(String email, TradeOrder tradeOrder) throws Exception {
-        BigDecimal totalPrice = getTotalPrice(tradeOrder); // To be subtracted from cash
+    private BigDecimal executeBuyOrder(String email, TradeOrder tradeOrder, BigDecimal totalPrice) {
+        LOGGER.info("[{}] Executing BUY order: {}", email, tradeOrder.toString());
         // Check if user has enough cash
-        Portfolio portfolio = portfolioRepository.getByUser_Email(email);
+        Portfolio portfolio = portfolioService.getByUserEmail(email);
         if (portfolio.getCash().compareTo(totalPrice) < 0) {
             throw new InvalidOrderException("Insufficient funds!");
         }
@@ -72,9 +59,9 @@ public class MarketOrderExecutionStrategy implements OrderExecutionStrategy {
         return cashLeft;
     }
 
-    private BigDecimal executeSellOrder(String email, TradeOrder tradeOrder) throws Exception {
-        BigDecimal totalPrice = getTotalPrice(tradeOrder); // To be added to cash
-        Portfolio portfolio = portfolioRepository.getByUser_Email(email);
+    private BigDecimal executeSellOrder(String email, TradeOrder tradeOrder, BigDecimal totalPrice) {
+        LOGGER.info("[{}] Executing SELL order: {}", email, tradeOrder.toString());
+        Portfolio portfolio = portfolioService.getByUserEmail(email);
         BigDecimal cashLeft = portfolio.getCash().add(totalPrice);
         portfolio.setCash(cashLeft);
         subtractFromStockHolding(totalPrice, portfolio, tradeOrder); // Check and update
@@ -94,7 +81,7 @@ public class MarketOrderExecutionStrategy implements OrderExecutionStrategy {
                     portfolio.getStockHoldings().remove(stockHolding);
                     stockHoldingRepository.delete(stockHolding);
                 }
-                portfolioRepository.save(portfolio);
+                portfolioService.save(portfolio);
                 return;
             }
         }
@@ -108,13 +95,14 @@ public class MarketOrderExecutionStrategy implements OrderExecutionStrategy {
                 stockHolding.setQuantity(stockHolding.getQuantity() + tradeOrder.getQuantity());
                 stockHolding.setPurchasePrice(stockHolding.getPurchasePrice().add(totalPrice));
                 stockHolding.setDateTime(LocalDateTime.now());
+                // Changes get saved automatically
                 return;
             }
         }
         // Otherwise, create a new stock holding
         StockHolding stockHolding = createStockHolding(portfolio, tradeOrder, totalPrice);
         portfolio.getStockHoldings().add(stockHolding);
-        portfolioRepository.save(portfolio);
+        portfolioService.save(portfolio);
     }
 
     private StockHolding createStockHolding(
@@ -128,43 +116,9 @@ public class MarketOrderExecutionStrategy implements OrderExecutionStrategy {
         stockHolding.setPurchasePrice(price);
         stockHolding.setDuration(tradeOrder.getDuration());
         stockHolding.setSymbol(tradeOrder.getSymbol());
+        stockHolding.setName(tradeOrder.getName());
         stockHolding.setType(tradeOrder.getType());
         stockHolding.setDateTime(LocalDateTime.now());
         return stockHolding;
-    }
-
-    private BigDecimal getTotalPrice(TradeOrder tradeOrder) throws Exception {
-        BigDecimal price = fetchPrice(tradeOrder.getSymbol());
-
-        if (tradeOrder.getAction().equals(Constants.OrderAction.Buy)) {
-            price = price.add(PRICE_TICK);
-        } else if (tradeOrder.getAction().equals(Constants.OrderAction.Sell)) {
-            price = price.subtract(PRICE_TICK);
-        }
-
-        return price.multiply(BigDecimal.valueOf(tradeOrder.getQuantity()));
-    }
-
-    private BigDecimal fetchPrice(String symbol) throws Exception {
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("X-RapidAPI-Key", apiKey);
-            headers.add("X-RapidAPI-Host", apiHost);
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            RequestEntity<?> requestEntity = new RequestEntity<>(
-                headers,
-                HttpMethod.GET,
-                URI.create(PRICE_ENDPOINT + "?symbol=" + symbol)
-            );
-            ResponseEntity<PriceResponse> responseEntity =
-                    restTemplate.exchange(requestEntity, PriceResponse.class);
-
-            if (responseEntity.hasBody() && responseEntity.getBody() != null) {
-                return new BigDecimal(responseEntity.getBody().getPrice());
-            }
-        } catch (RestClientException e) {
-            LOGGER.error("Couldn't retrieve stock quote: {}", e.getMessage());
-        }
-        throw new Exception("Couldn't fetch the current stock price.");
     }
 }

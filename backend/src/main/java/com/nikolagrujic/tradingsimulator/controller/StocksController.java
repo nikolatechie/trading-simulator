@@ -2,7 +2,7 @@ package com.nikolagrujic.tradingsimulator.controller;
 
 import com.nikolagrujic.tradingsimulator.model.StockInfo;
 import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
-import com.nikolagrujic.tradingsimulator.service.StocksService;
+import com.nikolagrujic.tradingsimulator.service.StockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/stocks")
 public class StocksController {
-    private final StocksService stocksService;
+    private final StockService stockService;
     private static final Logger LOGGER = LoggerFactory.getLogger(StocksController.class);
 
     @Autowired
-    public StocksController(StocksService stocksService) {
-        this.stocksService = stocksService;
+    public StocksController(StockService stockService) {
+        this.stockService = stockService;
     }
 
     @GetMapping
@@ -34,14 +34,12 @@ public class StocksController {
         try {
             LOGGER.info("Retrieving a list of stocks (page = {})", page);
             Pageable pageable = PageRequest.of(page, size);
-            Page<StockInfo> stocks = stocksService.getListOfStockInfo(search, pageable);
+            Page<StockInfo> stocks = stockService.getListOfStockInfo(search, pageable);
             return ResponseEntity.ok().body(stocks);
         } catch (Exception e) {
             LOGGER.error("Couldn't retrieve list of stocks: {}", e.getMessage());
             return ResponseEntity.status(500).body(
-                new ErrorResponse(
-                    e.getMessage()
-                )
+                new ErrorResponse(e.getMessage())
             );
         }
     }

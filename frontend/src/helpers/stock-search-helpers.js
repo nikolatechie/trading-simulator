@@ -1,4 +1,4 @@
-import { ActionTypes } from "../../../data/constants";
+import { ActionTypes } from "../data/constants";
 
 export const columns = [
   { headerName: "#" },

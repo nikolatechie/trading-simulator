@@ -27,7 +27,6 @@ public class TradeController {
     @PostMapping
     public ResponseEntity<?> placeOrder(@RequestBody TradeOrder tradeOrder) {
         try {
-            LOGGER.info("Placing an order {}", tradeOrder.toString());
             return ResponseEntity.ok(tradeService.placeOrder(tradeOrder));
         } catch (InvalidOrderException e) {
             LOGGER.error("Invalid trade order: {}", e.getMessage());

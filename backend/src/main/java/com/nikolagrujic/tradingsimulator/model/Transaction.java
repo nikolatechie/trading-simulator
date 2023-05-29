@@ -1,5 +1,6 @@
 package com.nikolagrujic.tradingsimulator.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,20 +14,24 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "stock_holding")
-public class StockHolding {
+@Table
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "portfolio_id")
-    private Portfolio portfolio;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @NotNull
+    private Constants.OrderAction action;
 
     @NotNull
     @NotEmpty

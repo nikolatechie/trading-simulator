@@ -2,7 +2,7 @@ import React from "react";
 import {
   formatStockChange,
   getColorStringByValue,
-} from "./helpers/stock-details-helpers";
+} from "../../helpers/stock-details-helpers";
 import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 

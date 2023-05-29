@@ -3,12 +3,11 @@ package com.nikolagrujic.tradingsimulator.service;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.exception.InvalidOrderException;
+import com.nikolagrujic.tradingsimulator.model.Transaction;
 import com.nikolagrujic.tradingsimulator.service.order.execution.MarketOrderExecutionStrategy;
 import com.nikolagrujic.tradingsimulator.service.order.execution.OrderExecutionStrategy;
 import com.nikolagrujic.tradingsimulator.model.Portfolio;
 import com.nikolagrujic.tradingsimulator.model.TradeOrder;
-import com.nikolagrujic.tradingsimulator.repository.PortfolioRepository;
-import com.nikolagrujic.tradingsimulator.repository.StockInfoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,23 +17,30 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class TradeService {
-    private final StockInfoRepository stockInfoRepository;
-    private final PortfolioRepository portfolioRepository;
+    private final PortfolioService portfolioService;
     private final ApplicationContext applicationContext;
+    private final TransactionService transactionService;
+    private final UserService userService;
+    private final StockService stockService;
     private OrderExecutionStrategy orderExecutionStrategy;
     private static final Logger LOGGER = LoggerFactory.getLogger(TradeService.class);
 
     @Autowired
     public TradeService(
-            StockInfoRepository stockInfoRepository,
-            PortfolioRepository portfolioRepository,
-            ApplicationContext applicationContext) {
-        this.stockInfoRepository = stockInfoRepository;
-        this.portfolioRepository = portfolioRepository;
+            PortfolioService portfolioService,
+            ApplicationContext applicationContext,
+            TransactionService transactionService,
+            UserService userService,
+            StockService stockService) {
+        this.portfolioService = portfolioService;
         this.applicationContext = applicationContext;
+        this.transactionService = transactionService;
+        this.userService = userService;
+        this.stockService = stockService;
     }
 
     private String getUserEmail() {
@@ -44,6 +50,7 @@ public class TradeService {
 
     public ObjectNode placeOrder(TradeOrder tradeOrder) throws Exception {
         String email = getUserEmail();
+        LOGGER.info("[{}] Placing a trade order: {}", email, tradeOrder.toString());
         boolean locked = setPortfolioLock(email, true); // Lock portfolio
         if (!locked) throw new Exception("Another order is currently in progress...");
         ObjectNode result;
@@ -62,14 +69,31 @@ public class TradeService {
         checkOrder(tradeOrder);
         // Order is valid - proceed
         configureExecutionStrategy(tradeOrder);
-        return this.orderExecutionStrategy.executeOrder(email, tradeOrder);
+        BigDecimal totalPrice = stockService.getTotalPrice(tradeOrder); // Get stock price
+        createTransaction(email, tradeOrder, totalPrice);
+        return this.orderExecutionStrategy.executeOrder(email, tradeOrder, totalPrice);
+    }
+
+    private void createTransaction(String email, TradeOrder tradeOrder, BigDecimal price) {
+        LOGGER.info("[{}] Recording a new transaction: {}", email, tradeOrder.toString());
+        Transaction transaction = new Transaction();
+        transaction.setAction(tradeOrder.getAction());
+        transaction.setSymbol(tradeOrder.getSymbol());
+        transaction.setName(tradeOrder.getName());
+        transaction.setType(tradeOrder.getType());
+        transaction.setQuantity(tradeOrder.getQuantity());
+        transaction.setDuration(tradeOrder.getDuration());
+        transaction.setUser(userService.findByEmail(email));
+        transaction.setPurchasePrice(price);
+        transaction.setDateTime(LocalDateTime.now());
+        transactionService.save(transaction);
     }
 
     boolean setPortfolioLock(String email, boolean locked) throws Exception {
         for (int i = 0; i < 5; ++i) {
-            Portfolio portfolio = portfolioRepository.getByUser_EmailAndLocked(email, !locked);
+            Portfolio portfolio = portfolioService.getByUserEmailAndLocked(email, !locked);
             portfolio.setLocked(locked);
-            portfolio = portfolioRepository.save(portfolio);
+            portfolio = portfolioService.save(portfolio);
             if (portfolio.isLocked() != locked) {
                 Thread.sleep(400);
                 continue;
@@ -92,7 +116,7 @@ public class TradeService {
 
     // Throws an exception if order is invalid
     private void checkOrder(TradeOrder tradeOrder) throws InvalidOrderException {
-        if (!stockInfoRepository.existsBySymbol(tradeOrder.getSymbol())) {
+        if (!stockService.existsBySymbol(tradeOrder.getSymbol())) {
             throw new InvalidOrderException(tradeOrder.getSymbol() + " is not a valid symbol.");
         }
         if (tradeOrder.getQuantity() < 1) {

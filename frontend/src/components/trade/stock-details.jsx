@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useReducer } from "react";
 import { Alert, Typography, CircularProgress, Grid, Box } from "@mui/material";
 import { ActionTypes } from "../../data/constants";
-import { initialState, reducer } from "./helpers/stock-details-helpers";
+import { initialState, reducer } from "../../helpers/stock-details-helpers";
 import StockChart from "./stock-chart";
 import { StockPriceAndChange } from "./stock-price-change";
 import { QuoteInfoList } from "./quote-info-list";
@@ -59,6 +59,7 @@ export default function StockDetails({ stock, handleFormatQuote }) {
         }
       } catch (err) {
         console.log(err);
+        alert(err);
       }
     };
     fetchApiKey();

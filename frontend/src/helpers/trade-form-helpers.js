@@ -2,7 +2,7 @@ import {
   StockOrderActions,
   StockOrderTypes,
   StockOrderDurations,
-} from "../../../data/constants";
+} from "../data/constants";
 
 export const initialState = {
   action: StockOrderActions.BUY,

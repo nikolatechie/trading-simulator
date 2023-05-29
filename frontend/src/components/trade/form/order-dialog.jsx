@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { StockOrderActions } from "../../../data/constants";
-import { formatCash } from "../helpers/trade-form-helpers";
+import { formatCash } from "../../../helpers/trade-form-helpers";
 
 const useStyles = makeStyles(() => ({
   rowContainer: {

@@ -1,5 +1,4 @@
-import { MONTHS_SHORT } from "../../../data/constants";
-import { StockTimeRanges } from "../../../data/constants";
+import { MONTHS_SHORT, StockTimeRanges } from "../data/constants";
 
 // Called after fetching data from the API
 // Formats data and returns it to set state

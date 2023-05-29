@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,4 +46,7 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Portfolio portfolio;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 }

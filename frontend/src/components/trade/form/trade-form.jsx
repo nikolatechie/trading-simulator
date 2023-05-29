@@ -7,7 +7,7 @@ import {
   initialState,
   getDurationKey,
   placeTradeOrder,
-} from "../helpers/trade-form-helpers";
+} from "../../../helpers/trade-form-helpers";
 import { CashBalance } from "./cash-balance";
 import { OrderAction } from "./order-action";
 import { OrderQuantity } from "./order-quantity";
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const TradeForm = ({ symbol, bidPrice, askPrice }) => {
+export const TradeForm = ({ symbol, name, bidPrice, askPrice }) => {
   const classes = useStyles();
   const [action, setAction] = useState(initialState.action);
   const [quantity, setQuantity] = useState(initialState.quantity);
@@ -56,40 +56,40 @@ export const TradeForm = ({ symbol, bidPrice, askPrice }) => {
     (e) => {
       setAction(e.target.value);
     },
-    [action]
+    [action, symbol, bidPrice, askPrice]
   );
 
   const handleQuantityChange = useCallback(
     (e) => {
       setQuantity(e.target.value);
     },
-    [quantity]
+    [quantity, symbol, bidPrice, askPrice]
   );
 
   const handleShowMax = useCallback(async () => {
     const quantity = await getMaxQuantity(action, symbol, askPrice);
     setQuantity(quantity);
-  }, [action, quantity]);
+  }, [action, symbol, bidPrice, askPrice, quantity]);
 
   const handleOrderTypeChange = useCallback(
     (e) => {
       setType(e.target.value);
     },
-    [type]
+    [type, symbol, bidPrice, askPrice]
   );
 
   const handlePriceChange = useCallback(
     (e) => {
       setPrice(e.target.value);
     },
-    [price]
+    [price, symbol, bidPrice, askPrice]
   );
 
   const handleDurationChange = useCallback(
     (e) => {
       setDuration(e.target.value);
     },
-    [duration]
+    [duration, symbol, bidPrice, askPrice]
   );
 
   const handleClearOrder = useCallback(() => {
@@ -112,6 +112,7 @@ export const TradeForm = ({ symbol, bidPrice, askPrice }) => {
     setDialogOpen(false);
     const response = await placeTradeOrder({
       symbol: symbol,
+      name: name,
       action: action,
       quantity: quantity,
       type: type,

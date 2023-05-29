@@ -5,7 +5,7 @@ import { CustomChartTooltip } from "./custom-chart-tooltip";
 import {
   formatFetchedHistoryData,
   extractDataForChart,
-} from "./helpers/stock-chart-helpers";
+} from "../../helpers/stock-chart-helpers";
 import {
   Area,
   XAxis,
@@ -35,9 +35,12 @@ export default function StockChart(props) {
           const formattedData = formatFetchedHistoryData(data, timeRange);
           setPriceHistory(formattedData.history);
           setChartData(formattedData.chartData);
+        } else {
+          alert("Can't fetch the chart data now.");
         }
       } catch (error) {
         console.error(error);
+        alert(error);
       }
     };
     fetchStockData();

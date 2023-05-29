@@ -1,4 +1,4 @@
-import { ActionTypes } from "../../../data/constants";
+import { ActionTypes } from "../data/constants";
 import { styled } from "@mui/styles";
 import { Box } from "@mui/material";
 

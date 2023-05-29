@@ -40,6 +40,7 @@ export default function TradePage() {
       {stock.symbol !== null && quote.askPrice !== null && (
         <TradeForm
           symbol={stock.symbol}
+          name={stock.name}
           bidPrice={quote.bidPrice}
           askPrice={quote.askPrice}
         />

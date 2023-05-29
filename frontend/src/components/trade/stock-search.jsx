@@ -16,7 +16,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { PAGE_SIZE, ActionTypes } from "../../data/constants";
-import { reducer, initialState, columns } from "./helpers/stock-search-helpers";
+import {
+  reducer,
+  initialState,
+  columns,
+} from "../../helpers/stock-search-helpers";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -163,6 +167,7 @@ export default function StockSearch(props) {
         count={state.totalPages}
         page={state.page + 1}
         onChange={(_event, page) => handlePageChange(page)}
+        color='primary'
         hidden={state.stocks.length === 0 || !state.canFetchStocks}
       />
       {!state.canFetchStocks ? (
