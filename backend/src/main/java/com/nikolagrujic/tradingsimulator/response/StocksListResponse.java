@@ -1,5 +1,6 @@
-package com.nikolagrujic.tradingsimulator.model;
+package com.nikolagrujic.tradingsimulator.response;
 
+import com.nikolagrujic.tradingsimulator.model.StockInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

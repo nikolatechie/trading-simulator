@@ -4,19 +4,35 @@ import com.nikolagrujic.tradingsimulator.model.Portfolio;
 import com.nikolagrujic.tradingsimulator.model.StockHolding;
 import com.nikolagrujic.tradingsimulator.model.User;
 import com.nikolagrujic.tradingsimulator.repository.PortfolioRepository;
-import lombok.AllArgsConstructor;
+import com.nikolagrujic.tradingsimulator.repository.StockHoldingRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
-@AllArgsConstructor
 @Service
 public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
+    private final StockHoldingRepository stockHoldingRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(PortfolioService.class);
+
+    @Autowired
+    public PortfolioService(
+        PortfolioRepository portfolioRepository,
+        StockHoldingRepository stockHoldingRepository
+    ) {
+        this.portfolioRepository = portfolioRepository;
+        this.stockHoldingRepository = stockHoldingRepository;
+    }
+
+    public Page<StockHolding> getHoldingsByEmail(Pageable pageable, String email) {
+        return stockHoldingRepository.getAllByPortfolio_User_Email(pageable, email);
+    }
 
     public void createUserPortfolio(User user) {
         Portfolio portfolio = new Portfolio();

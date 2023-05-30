@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { StockOrderActions } from "../../../data/constants";
-import { formatCash } from "../../../helpers/trade-form-helpers";
+import { formatFloat } from "../../../helpers/helpers";
 
 const useStyles = makeStyles(() => ({
   rowContainer: {
@@ -79,7 +79,7 @@ export const OrderDialog = React.memo((props) => {
           <Box>
             <Typography variant='h6'>
               $
-              {formatCash(
+              {formatFloat(
                 getTotalEstimate(
                   props.action,
                   props.quantity,

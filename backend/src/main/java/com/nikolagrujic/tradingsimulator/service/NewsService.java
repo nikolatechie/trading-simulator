@@ -2,7 +2,7 @@ package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.model.NewsArticle;
-import com.nikolagrujic.tradingsimulator.model.NewsListResponse;
+import com.nikolagrujic.tradingsimulator.response.NewsListResponse;
 import com.nikolagrujic.tradingsimulator.repository.NewsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

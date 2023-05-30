@@ -20,11 +20,24 @@ const iconMap = {
   "Sign out": <LogoutIcon />,
 };
 
+const GREY_HOVER = "#f5f5f5";
+const GREY_SELECTED = "#e5e5e5";
+
 export const DrawerListItem = (props) => {
   const icon = iconMap[props.name];
 
   return (
-    <ListItemButton onClick={() => props.handleSelectPage(props.name)}>
+    <ListItemButton
+      onClick={() => props.handleSelectPage(props.name)}
+      sx={{
+        backgroundColor:
+          props.selectedPage === props.name ? GREY_SELECTED : "transparent",
+        ":hover": {
+          backgroundColor:
+            props.selectedPage === props.name ? GREY_SELECTED : GREY_HOVER,
+        },
+      }}
+    >
       <ListItemIcon>{icon}</ListItemIcon>
       <ListItemText primary={props.name} />
     </ListItemButton>

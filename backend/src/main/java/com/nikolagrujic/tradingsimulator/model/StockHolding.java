@@ -1,5 +1,6 @@
 package com.nikolagrujic.tradingsimulator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class StockHolding {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;

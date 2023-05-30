@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { formatCash } from "../../../helpers/trade-form-helpers";
+import { formatFloat } from "../../../helpers/helpers";
 
 export const CashBalance = React.memo(({ cash }) => (
   <Box display='flex'>
@@ -8,7 +8,7 @@ export const CashBalance = React.memo(({ cash }) => (
       Cash:
     </Typography>
     <Typography variant='h5' fontWeight='bold'>
-      ${formatCash(cash)}
+      ${formatFloat(cash)}
     </Typography>
   </Box>
 ));

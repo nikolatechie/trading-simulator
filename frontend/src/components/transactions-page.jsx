@@ -12,7 +12,7 @@ import {
   Pagination,
   Paper,
 } from "@mui/material";
-import { formatDateTime } from "../helpers/helpers";
+import { formatDateTime, formatFloat } from "../helpers/helpers";
 
 const useStyles = makeStyles((theme) => ({
   tableHeaderCell: {
@@ -55,7 +55,7 @@ export default function TransactionsPage() {
           alert(data.errorMessage);
         }
       } catch (error) {
-        console.error("Error fetching transactions:", error);
+        console.error("Error occurred while fetching transactions:", error);
       }
     };
     fetchTransactions();
@@ -102,13 +102,13 @@ export default function TransactionsPage() {
                 <TableCell>{transaction.name}</TableCell>
                 <TableCell>
                   $
-                  {parseFloat(
+                  {formatFloat(
                     transaction.purchasePrice / transaction.quantity
-                  ).toFixed(2)}
+                  )}
                 </TableCell>
                 <TableCell>{transaction.quantity}</TableCell>
-                <TableCell>
-                  ${parseFloat(transaction.purchasePrice).toFixed(2)}
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  ${formatFloat(transaction.purchasePrice)}
                 </TableCell>
                 <TableCell>{transaction.type}</TableCell>
                 <TableCell>{transaction.duration}</TableCell>

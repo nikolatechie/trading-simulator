@@ -60,16 +60,18 @@ export const Drawer = React.memo((props) => {
           <DrawerListItem
             key={index}
             name={item}
+            selectedPage={props.selectedPage}
             handleSelectPage={props.handleSelectPage}
           />
         ))}
       </List>
-      <Divider sx={{ my: 1 }} />
+      <Divider />
       <List component='nav' sx={{ mt: "auto" }}>
         {drawerSecondaryListItems.map((item, index) => (
           <DrawerListItem
             key={index}
             name={item}
+            selectedPage={props.selectedPage}
             handleSelectPage={props.handleSelectPage}
           />
         ))}

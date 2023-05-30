@@ -2,9 +2,9 @@ package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.constants.Constants.StockExchange;
-import com.nikolagrujic.tradingsimulator.model.PriceResponse;
+import com.nikolagrujic.tradingsimulator.response.PriceResponse;
 import com.nikolagrujic.tradingsimulator.model.StockInfo;
-import com.nikolagrujic.tradingsimulator.model.StocksListResponse;
+import com.nikolagrujic.tradingsimulator.response.StocksListResponse;
 import com.nikolagrujic.tradingsimulator.model.TradeOrder;
 import com.nikolagrujic.tradingsimulator.repository.StockInfoRepository;
 import org.slf4j.Logger;

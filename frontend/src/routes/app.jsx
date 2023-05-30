@@ -38,6 +38,7 @@ export default function App() {
         <Drawer
           open={open}
           toggleDrawer={toggleDrawer}
+          selectedPage={selectedPage}
           handleSelectPage={handleSelectPage}
         />
         <Box

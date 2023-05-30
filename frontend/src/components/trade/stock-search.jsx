@@ -155,7 +155,14 @@ export default function StockSearch(props) {
               >
                 <TableCell>{PAGE_SIZE * state.page + index + 1}</TableCell>
                 {columns.slice(1).map((column) => (
-                  <TableCell key={column.field}>{row[column.field]}</TableCell>
+                  <TableCell
+                    key={column.field}
+                    sx={{
+                      fontWeight: column.field === "symbol" ? "bold" : "normal",
+                    }}
+                  >
+                    {row[column.field]}
+                  </TableCell>
                 ))}
               </TableRow>
             ))}

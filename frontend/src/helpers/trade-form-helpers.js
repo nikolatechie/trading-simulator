@@ -77,19 +77,6 @@ export const getMaxQuantity = async (action, symbol, askPrice) => {
   return quantity;
 };
 
-// Inserts commas
-export const formatCash = (cash) => {
-  cash = parseFloat(cash).toFixed(2);
-  let pointIdx = cash.indexOf(".") - 3;
-
-  while (pointIdx > 0) {
-    cash = cash.substring(0, pointIdx) + "," + cash.substring(pointIdx);
-    pointIdx -= 3;
-  }
-
-  return cash;
-};
-
 export const placeTradeOrder = async (tradeOrder) => {
   try {
     const token = localStorage.getItem("jwt");

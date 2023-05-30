@@ -56,12 +56,6 @@ export const formatStockChange = (change) => {
   return prefix + change + (isPercentChange ? "%" : "");
 };
 
-export const getColorStringByValue = (value) => {
-  value = parseFloat(value);
-  if (value === 0.0) return "#e6b800";
-  return value < 0.0 ? "red" : "green";
-};
-
 export const shortenNumber = (number) => {
   let ret = number.toString();
   if (number >= 1000000000) ret = (number / 1000000000).toFixed(1) + "B";

@@ -2,7 +2,7 @@ package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.exception.UserNotRegisteredException;
 import com.nikolagrujic.tradingsimulator.exception.UserNotVerifiedException;
-import com.nikolagrujic.tradingsimulator.model.JwtResponse;
+import com.nikolagrujic.tradingsimulator.response.JwtResponse;
 import com.nikolagrujic.tradingsimulator.model.LoginRequest;
 import com.nikolagrujic.tradingsimulator.model.User;
 import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
