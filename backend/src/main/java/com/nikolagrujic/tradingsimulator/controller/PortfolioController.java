@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nikolagrujic.tradingsimulator.model.StockHolding;
 import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
-import com.nikolagrujic.tradingsimulator.response.HoldingsResponse;
 import com.nikolagrujic.tradingsimulator.service.PortfolioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/portfolio")
 public class PortfolioController {
-    @Value("${twelvedata.api.key}")
-    private String twelveDataApiKey;
     private final PortfolioService portfolioService;
     private final ObjectMapper objectMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(PortfolioController.class);
@@ -47,9 +43,34 @@ public class PortfolioController {
             LOGGER.info("Retrieving portfolio holdings: {}", email);
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
             Page<StockHolding> holdings = portfolioService.getHoldingsByEmail(pageable, email);
-            return ResponseEntity.ok(new HoldingsResponse(twelveDataApiKey, holdings));
+            return ResponseEntity.ok(holdings);
         } catch (Exception e) {
             LOGGER.error("Couldn't retrieve portfolio holdings: {}", e.getMessage());
+            return ResponseEntity.status(500).body(
+                new ErrorResponse(e.getMessage())
+            );
+        }
+    }
+
+    @GetMapping("/overview")
+    public ResponseEntity<?> getOverview() {
+        try {
+            return ResponseEntity.ok(portfolioService.getOverview());
+        } catch (Exception e) {
+            LOGGER.error("An error occurred while retrieving overview: {}", e.getMessage());
+            return ResponseEntity.status(500).body(
+                new ErrorResponse(e.getMessage())
+            );
+        }
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<?> getPortfolioStats() {
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            return ResponseEntity.ok(portfolioService.getPortfolioStats(email));
+        } catch (Exception e) {
+            LOGGER.error("Couldn't retrieve portfolio stats: {}", e.getMessage());
             return ResponseEntity.status(500).body(
                 new ErrorResponse(e.getMessage())
             );
@@ -59,11 +80,24 @@ public class PortfolioController {
     @GetMapping("/cash")
     public ResponseEntity<?> getAvailableCash() {
         try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
             ObjectNode objectNode = objectMapper.createObjectNode();
-            objectNode.put("cash", portfolioService.getAvailableCash());
+            objectNode.put("cash", portfolioService.getAvailableCash(email));
             return ResponseEntity.ok(objectNode);
         } catch (Exception e) {
             LOGGER.error("Couldn't retrieve user cash: {}", e.getMessage());
+            return ResponseEntity.status(500).body(
+                new ErrorResponse(e.getMessage())
+            );
+        }
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<?> getPortfolioHistory() {
+        try {
+            return ResponseEntity.ok(portfolioService.getPortfolioHistory());
+        } catch (Exception e) {
+            LOGGER.info("Failed to retrieve portfolio history: {}", e.getMessage());
             return ResponseEntity.status(500).body(
                 new ErrorResponse(e.getMessage())
             );

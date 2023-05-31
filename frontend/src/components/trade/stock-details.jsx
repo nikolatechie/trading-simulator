@@ -59,7 +59,6 @@ export default function StockDetails({ stock, handleFormatQuote }) {
         }
       } catch (err) {
         console.log(err);
-        alert(err);
       }
     };
     fetchApiKey();

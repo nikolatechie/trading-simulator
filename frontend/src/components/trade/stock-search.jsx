@@ -74,7 +74,6 @@ export default function StockSearch(props) {
         dispatch({ type: ActionTypes.FETCH_SUCCESS, payload: data });
       } else {
         dispatch({ type: ActionTypes.FETCH_FAILURE });
-        alert(data.errorMessage);
       }
     } catch (err) {
       console.log(err);

@@ -27,4 +27,7 @@ public class Constants {
     public enum OrderDuration {
         IOC, FOK, DAY, GTC
     }
+
+    // Portfolio
+    public static final double STARTING_CASH_BALANCE = 30000.00;
 }

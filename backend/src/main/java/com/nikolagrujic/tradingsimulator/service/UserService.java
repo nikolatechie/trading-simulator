@@ -9,12 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +30,12 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-                       EmailVerificationService emailVerificationService,
-                       PortfolioService portfolioService) {
+                       EmailVerificationService emailVerificationService, PortfolioService portfolioService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailVerificationService = emailVerificationService;
         this.portfolioService = portfolioService;
+        this.portfolioService.setUserService(this); // Getting rid of circular dependency
     }
 
     @Transactional
@@ -74,8 +76,14 @@ public class UserService implements UserDetailsService {
             throw new ExpiredTokenException("The token expired. A new one will arrive shortly."); // No rollback here
         }
         user.setEmailVerified(true);
+        user.setVerificationDate(LocalDate.now());
         userRepository.save(user);
         LOGGER.info("Successfully verified user with token: {}", token);
+    }
+
+    public LocalDate getVerificationDate() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.getVerificationDate(email);
     }
 
     @Async

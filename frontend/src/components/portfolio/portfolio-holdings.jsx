@@ -12,9 +12,13 @@ import {
   Pagination,
   Paper,
   CircularProgress,
+  Typography,
 } from "@mui/material";
-import { fetchHoldings } from "../../helpers/portfolio-holdings-helpers.jsx";
-import { formatFloat } from "../../helpers/helpers";
+import {
+  fetchHoldings,
+  getArrowDirection,
+} from "../../helpers/portfolio-holdings-helpers.jsx";
+import { formatFloat, getColorStringByValue } from "../../helpers/helpers";
 
 const useStyles = makeStyles((theme) => ({
   tableHeaderCell: {
@@ -29,10 +33,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PortfolioHoldings() {
+export default function PortfolioHoldings(props) {
   const classes = useStyles();
   const [holdings, setHoldings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -42,7 +47,7 @@ export default function PortfolioHoldings() {
       const response = await fetchHoldings(page);
       setLoading(false);
       if (response.errorMessage) {
-        alert(response.errorMessage);
+        setError(true);
       } else {
         setHoldings(response.holdings);
         setTotalPages(response.totalPages);
@@ -55,14 +60,54 @@ export default function PortfolioHoldings() {
     setPage(value);
   };
 
+  if (loading) {
+    return (
+      <Box display='flex' justifyContent='center'>
+        <CircularProgress sx={{ margin: "auto", mt: 10 }} />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert severity='error' sx={{ mt: 2 }}>
+        Couldn't fetch your portfolio holdings.
+      </Alert>
+    );
+  }
+
+  if (holdings.length === 0) {
+    return (
+      <Alert severity='info' sx={{ mt: 2 }}>
+        You don't have any holdings.
+      </Alert>
+    );
+  }
+
   return (
-    <Box>
-      {loading && (
-        <Box display='flex' justifyContent='center'>
-          <CircularProgress sx={{ margin: "auto", mt: 10 }} />
+    <Box sx={{ mt: 2 }}>
+      <Box display='flex' gap={5}>
+        <Box py={2}>
+          <Typography variant='body2'>TOTAL VALUE</Typography>
+          <Typography variant='h6' fontWeight='bold'>
+            ${formatFloat(props.stats.totalValue)}
+          </Typography>
         </Box>
-      )}
-      <TableContainer component={Paper} hidden={holdings.length === 0}>
+        <Box py={2}>
+          <Typography variant='body2'>TOTAL GAIN/LOSS</Typography>
+          <Box display='flex'>
+            <Typography
+              variant='h6'
+              fontWeight='bold'
+              color={getColorStringByValue(props.stats.totalGainOrLoss)}
+            >
+              ${formatFloat(props.stats.totalGainOrLoss)}
+            </Typography>
+            {getArrowDirection(props.stats.totalGainOrLoss)}
+          </Box>
+        </Box>
+      </Box>
+      <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
@@ -73,10 +118,10 @@ export default function PortfolioHoldings() {
                 Current Price
               </TableCell>
               <TableCell className={classes.tableHeaderCell}>
-                Purchase Price
+                Quantity
               </TableCell>
               <TableCell className={classes.tableHeaderCell}>
-                Quantity
+                Total Purchase Price
               </TableCell>
               <TableCell className={classes.tableHeaderCell}>
                 Total Cash Value
@@ -100,13 +145,13 @@ export default function PortfolioHoldings() {
                   ${formatFloat(holdings.currentPrice)}
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>
-                  ${formatFloat(holdings.purchasePrice / holdings.quantity)}
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>
                   {holdings.quantity}
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>
                   ${formatFloat(holdings.purchasePrice)}
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>
+                  ${formatFloat(holdings.quantity * holdings.currentPrice)}
                 </TableCell>
                 <TableCell>{holdings.totalGainOrLoss}</TableCell>
                 <TableCell>{holdings.type}</TableCell>
@@ -120,13 +165,9 @@ export default function PortfolioHoldings() {
         count={totalPages}
         page={page + 1}
         onChange={(_event, page) => handlePageChange(page - 1)}
-        hidden={holdings.length === 0}
         color='primary'
         sx={{ mt: 1 }}
       />
-      {holdings.length === 0 && !loading && (
-        <Alert severity='info'>You don't have any holdings.</Alert>
-      )}
     </Box>
   );
 }

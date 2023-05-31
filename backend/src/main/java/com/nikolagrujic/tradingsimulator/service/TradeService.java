@@ -69,7 +69,7 @@ public class TradeService {
         checkOrder(tradeOrder);
         // Order is valid - proceed
         configureExecutionStrategy(tradeOrder);
-        BigDecimal totalPrice = stockService.getTotalPrice(tradeOrder); // Get stock price
+        BigDecimal totalPrice = stockService.fetchAndGetTotalPrice(tradeOrder); // Get stock price
         createTransaction(email, tradeOrder, totalPrice);
         return this.orderExecutionStrategy.executeOrder(email, tradeOrder, totalPrice);
     }

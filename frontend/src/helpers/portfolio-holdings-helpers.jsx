@@ -1,30 +1,8 @@
 import React from "react";
 import { Typography } from "@mui/material";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { formatFloat, getColorStringByValue } from "./helpers";
-
-const fetchStockPrice = async (twelveDataApiKey, symbol) => {
-  try {
-    const response = await fetch(
-      `https://twelve-data1.p.rapidapi.com/price?symbol=${symbol}&format=json&outputsize=30`,
-      {
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Key": twelveDataApiKey,
-          "X-RapidAPI-Host": "twelve-data1.p.rapidapi.com",
-        },
-      }
-    );
-    if (response.ok) {
-      const data = await response.json();
-      return data.price;
-    } else {
-      throw new Error(response.statusText);
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
 
 const getTotalGainOrLoss = (quantity, price, totalPurchasePrice) => {
   const totalGainOrLoss = quantity * price - totalPurchasePrice;
@@ -41,26 +19,17 @@ const getTotalGainOrLoss = (quantity, price, totalPurchasePrice) => {
   );
 };
 
-const transformHoldings = async (fetchedHoldings, twelveDataApiKey) => {
-  const transformedHoldings = await Promise.all(
-    fetchedHoldings.map(async (holding) => {
-      try {
-        const price = await fetchStockPrice(twelveDataApiKey, holding.symbol);
-        const modifiedHolding = {
-          ...holding,
-          currentPrice: price,
-          totalGainOrLoss: getTotalGainOrLoss(
-            holding.quantity,
-            price,
-            holding.purchasePrice
-          ),
-        };
-        return modifiedHolding;
-      } catch (error) {
-        throw error;
-      }
-    })
-  );
+const transformHoldings = (holdings) => {
+  const transformedHoldings = holdings.map((holding) => {
+    return {
+      ...holding,
+      totalGainOrLoss: getTotalGainOrLoss(
+        holding.quantity,
+        holding.currentPrice,
+        holding.purchasePrice
+      ),
+    };
+  });
   return transformedHoldings;
 };
 
@@ -79,23 +48,36 @@ export const fetchHoldings = async (page) => {
     );
     const data = await response.json();
     if (response.ok) {
-      try {
-        const transformedHoldings = await transformHoldings(
-          data.holdings.content,
-          data.twelveDataApiKey
-        );
-        return {
-          holdings: transformedHoldings,
-          totalPages: data.totalPages,
-        };
-      } catch (error) {
-        return { errorMessage: error };
-      }
+      const transformedHoldings = transformHoldings(data.content);
+      return {
+        holdings: transformedHoldings,
+        totalPages: data.totalPages,
+      };
     } else {
       return { errorMessage: data.errorMessage };
     }
   } catch (error) {
     console.error("Error occurred while fetching holdings:", error);
     return { errorMessage: error };
+  }
+};
+
+// Add a function to determine the arrow direction based on gain/loss
+export const getArrowDirection = (value) => {
+  const arrowMarginTop = "3px";
+  if (value > 0) {
+    return (
+      <ArrowUpwardIcon
+        sx={{ color: getColorStringByValue(value), mt: arrowMarginTop }}
+      />
+    );
+  } else if (value < 0) {
+    return (
+      <ArrowDownwardIcon
+        sx={{ color: getColorStringByValue(value), mt: arrowMarginTop }}
+      />
+    );
+  } else {
+    return null;
   }
 };

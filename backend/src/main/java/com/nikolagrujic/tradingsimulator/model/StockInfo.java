@@ -6,8 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +27,14 @@ public class StockInfo {
     @NotBlank
     @Column(unique = true)
     private String symbol;
+
+    @NotNull
+    @Column(columnDefinition = "decimal(19, 2) default 0.00")
+    @DecimalMin(value = "0.00")
+    private BigDecimal currentPrice = BigDecimal.ZERO;
+
+    @NotNull
+    private LocalDateTime lastUpdated = LocalDateTime.now();
 
     @NotNull
     @NotBlank

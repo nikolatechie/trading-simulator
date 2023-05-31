@@ -30,6 +30,9 @@ public class StockHolding {
     @JoinColumn(name = "portfolio_id")
     private Portfolio portfolio;
 
+    @Transient
+    private BigDecimal currentPrice;
+
     @NotNull
     @NotEmpty
     @NotBlank

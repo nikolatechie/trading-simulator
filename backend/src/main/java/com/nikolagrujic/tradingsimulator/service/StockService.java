@@ -2,6 +2,8 @@ package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.constants.Constants.StockExchange;
+import com.nikolagrujic.tradingsimulator.model.StockHolding;
+import com.nikolagrujic.tradingsimulator.repository.StockHoldingRepository;
 import com.nikolagrujic.tradingsimulator.response.PriceResponse;
 import com.nikolagrujic.tradingsimulator.model.StockInfo;
 import com.nikolagrujic.tradingsimulator.response.StocksListResponse;
@@ -21,6 +23,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,12 +37,15 @@ public class StockService {
     private static final String PRICE_ENDPOINT = "https://twelve-data1.p.rapidapi.com/price";
     private final RestTemplate restTemplate = new RestTemplate();
     private final StockInfoRepository stockInfoRepository;
+    private final StockHoldingRepository stockHoldingRepository;
     private static final BigDecimal PRICE_TICK = new BigDecimal("0.01");
+    private static final long PULL_STOCK_PRICES_PERIOD_MILLISECONDS = 30 * 60 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(StockService.class);
 
     @Autowired
-    public StockService(StockInfoRepository stockInfoRepository) {
+    public StockService(StockInfoRepository stockInfoRepository, StockHoldingRepository stockHoldingRepository) {
         this.stockInfoRepository = stockInfoRepository;
+        this.stockHoldingRepository = stockHoldingRepository;
     }
 
     public boolean existsBySymbol(String symbol) {
@@ -86,6 +92,7 @@ public class StockService {
                     for (StockInfo stockInfo : stockList) {
                         try {
                             if (!stockInfoRepository.existsBySymbol(stockInfo.getSymbol())) {
+                                stockInfo.setLastUpdated(LocalDateTime.now());
                                 stockInfoRepository.save(formatStockInfo(stockInfo));
                             }
                         } catch (Exception e) {
@@ -124,8 +131,9 @@ public class StockService {
         throw new Exception("Couldn't fetch the current stock price.");
     }
 
-    public BigDecimal getTotalPrice(TradeOrder tradeOrder) throws Exception {
+    public BigDecimal fetchAndGetTotalPrice(TradeOrder tradeOrder) throws Exception {
         BigDecimal price = fetchPrice(tradeOrder.getSymbol());
+        updateCurrentPrice(tradeOrder.getSymbol(), price);
 
         if (tradeOrder.getAction().equals(Constants.OrderAction.Buy)) {
             price = price.add(PRICE_TICK);
@@ -134,5 +142,44 @@ public class StockService {
         }
 
         return price.multiply(BigDecimal.valueOf(tradeOrder.getQuantity()));
+    }
+
+    public BigDecimal getCurrentPrice(String symbol) {
+        return stockInfoRepository.getPriceBySymbol(symbol);
+    }
+
+    public void updateCurrentPrice(String symbol, BigDecimal price) {
+        LOGGER.info("[{}] Updating current price to {}", symbol, price);
+        stockInfoRepository.updateCurrentPrice(symbol, price, LocalDateTime.now());
+    }
+
+    private boolean shouldUpdatePrice(String symbol) {
+        LocalDateTime lastUpdated = stockInfoRepository.getUpdateDateTimeBySymbol(symbol);
+        if (lastUpdated == null) return false;
+        return lastUpdated.isBefore(LocalDateTime.now().minusHours(1));
+    }
+
+    @Async
+    @Scheduled(
+        initialDelay = Constants.REQUEST_DELAY_MILLISECONDS,
+        fixedDelay = PULL_STOCK_PRICES_PERIOD_MILLISECONDS
+    )
+    public void updateStockPrices() {
+        List<StockHolding> stocks = stockHoldingRepository.findDistinctBySymbolNotNull();
+        int countUpdated = 0;
+        for (int i = 0; i < stocks.size(); ++i) {
+            String symbol = stocks.get(i).getSymbol();
+            if (shouldUpdatePrice(symbol)) {
+                try {
+                    BigDecimal price = fetchPrice(symbol);
+                    updateCurrentPrice(stocks.get(i).getSymbol(), price);
+                    ++countUpdated;
+                } catch (Exception e) {
+                    --i; // Try again
+                }
+            }
+        }
+        String strSuffix = (countUpdated == 1) ? "stock." : "stocks.";
+        LOGGER.info("Updated current stock prices for {} {}", countUpdated, strSuffix);
     }
 }

@@ -1,5 +1,6 @@
 package com.nikolagrujic.tradingsimulator.model;
 
+import com.nikolagrujic.tradingsimulator.constants.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,15 +20,18 @@ public class Portfolio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL)
     private List<StockHolding> stockHoldings;
 
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.EAGER)
+    private List<PortfolioHistory> history;
+
     @Column(columnDefinition = "decimal(19, 2) default 30000.00")
-    private BigDecimal cash = BigDecimal.valueOf(30000.00);
+    private BigDecimal cash = BigDecimal.valueOf(Constants.STARTING_CASH_BALANCE);
 
     @Column
     private boolean locked = false;

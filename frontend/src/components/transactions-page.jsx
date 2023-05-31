@@ -11,6 +11,7 @@ import {
   TableCell,
   Pagination,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import { formatDateTime, formatFloat } from "../helpers/helpers";
 
@@ -25,16 +26,24 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#fafafa",
     },
   },
+  rowContainer: {
+    width: "80%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: theme.spacing(5),
+  },
 }));
 
 export default function TransactionsPage() {
   const classes = useStyles();
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchTransactions = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
@@ -48,6 +57,7 @@ export default function TransactionsPage() {
           }
         );
         const data = await response.json();
+        setLoading(false);
         if (response.ok) {
           setTransactions(data.content);
           setTotalPages(data.totalPages);
@@ -55,6 +65,7 @@ export default function TransactionsPage() {
           alert(data.errorMessage);
         }
       } catch (error) {
+        setLoading(false);
         console.error("Error occurred while fetching transactions:", error);
       }
     };
@@ -65,9 +76,25 @@ export default function TransactionsPage() {
     setPage(value);
   };
 
+  if (loading) {
+    return (
+      <Box display='flex' justifyContent='center'>
+        <CircularProgress sx={{ margin: "auto", mt: 10 }} />
+      </Box>
+    );
+  }
+
+  if (transactions.length === 0) {
+    return (
+      <Box className={classes.rowContainer}>
+        <Alert severity='info'>You don't have any transactions.</Alert>
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ width: "80%", mx: "auto", mt: 5 }}>
-      <TableContainer component={Paper} hidden={transactions.length === 0}>
+    <Box className={classes.rowContainer}>
+      <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
@@ -122,13 +149,9 @@ export default function TransactionsPage() {
         count={totalPages}
         page={page + 1}
         onChange={(_event, page) => handlePageChange(page - 1)}
-        hidden={transactions.length === 0}
         color='primary'
         sx={{ mt: 1 }}
       />
-      {transactions.length === 0 && (
-        <Alert severity='info'>You don't have any transactions.</Alert>
-      )}
     </Box>
   );
 }
