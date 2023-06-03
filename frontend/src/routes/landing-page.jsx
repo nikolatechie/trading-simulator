@@ -87,7 +87,7 @@ export default function LandingPage() {
           <Grid item xs={12} md={6} lg={6} sx={{ paddingBottom: "1rem" }}>
             <Typography variant='p'>
               Anyone can create a free account and get started with virtual
-              trading on over <strong>5,000 stocks</strong>. Our app offers an
+              trading on over <strong>7,000 stocks</strong>. Our app offers an
               exciting way for beginners to learn the ins and outs of the stock
               market, while also providing a safe space for experienced traders
               to test out new strategies. <br />

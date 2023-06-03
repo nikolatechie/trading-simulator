@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardMedia, CardContent, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { formatDateTime } from "../helpers/helpers";
+import { formatDateTime } from "../helpers/helpers.jsx";
 
 const useStyles = makeStyles({
   card: {

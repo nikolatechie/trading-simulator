@@ -77,6 +77,19 @@ public class PortfolioController {
         }
     }
 
+    @GetMapping("/rank")
+    public ResponseEntity<?> getPortfolioRank() {
+        try {
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            return ResponseEntity.ok(portfolioService.getPortfolioRank(email));
+        } catch (Exception e) {
+            LOGGER.error("Failed to retrieve the user rank: {}", e.getMessage());
+            return ResponseEntity.status(500).body(
+                new ErrorResponse(e.getMessage())
+            );
+        }
+    }
+
     @GetMapping("/cash")
     public ResponseEntity<?> getAvailableCash() {
         try {

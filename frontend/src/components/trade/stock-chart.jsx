@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ButtonGroup, Button, Box, CircularProgress } from "@mui/material";
 import { StockTimeRanges } from "../../data/constants";
-import { CustomChartTooltip } from "./custom-chart-tooltip";
+import { StockChartTooltip } from "./stock-chart-tooltip";
 import {
   formatFetchedHistoryData,
   extractDataForChart,
@@ -57,7 +57,7 @@ export default function StockChart(props) {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
         <ButtonGroup variant='text'>
           {Object.keys(StockTimeRanges).map((key, i) => (
             <Button
@@ -84,10 +84,10 @@ export default function StockChart(props) {
                 <stop offset='95%' stopColor='#8884d8' stopOpacity={0.1} />
               </linearGradient>
             </defs>
-            <XAxis dataKey='dateShort' minTickGap={20} />
-            <YAxis />
+            <XAxis dataKey='dateShort' minTickGap={20} dy={6} />
+            <YAxis dy={-2} />
             <CartesianGrid strokeDasharray='3 3' />
-            <Tooltip content={<CustomChartTooltip />} />
+            <Tooltip content={<StockChartTooltip />} />
             <Area
               type='monotone'
               dataKey='price'

@@ -2,6 +2,8 @@ export const DRAWER_WIDTH = 240;
 
 export const PAGE_SIZE = 10;
 
+export const STARTING_CASH_BALANCE = 30000.0;
+
 export const MONTHS_SHORT = [
   "null",
   "Jan",

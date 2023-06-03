@@ -13,7 +13,7 @@ import {
   Paper,
   CircularProgress,
 } from "@mui/material";
-import { formatDateTime, formatFloat } from "../helpers/helpers";
+import { formatDateTime, formatFloat } from "../helpers/helpers.jsx";
 
 const useStyles = makeStyles((theme) => ({
   tableHeaderCell: {

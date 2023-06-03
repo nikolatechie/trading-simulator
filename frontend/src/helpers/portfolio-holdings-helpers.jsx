@@ -1,8 +1,6 @@
 import React from "react";
 import { Typography } from "@mui/material";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { formatFloat, getColorStringByValue } from "./helpers";
+import { formatFloat, getColorStringByValue } from "./helpers.jsx";
 
 const getTotalGainOrLoss = (quantity, price, totalPurchasePrice) => {
   const totalGainOrLoss = quantity * price - totalPurchasePrice;
@@ -59,25 +57,5 @@ export const fetchHoldings = async (page) => {
   } catch (error) {
     console.error("Error occurred while fetching holdings:", error);
     return { errorMessage: error };
-  }
-};
-
-// Add a function to determine the arrow direction based on gain/loss
-export const getArrowDirection = (value) => {
-  const arrowMarginTop = "3px";
-  if (value > 0) {
-    return (
-      <ArrowUpwardIcon
-        sx={{ color: getColorStringByValue(value), mt: arrowMarginTop }}
-      />
-    );
-  } else if (value < 0) {
-    return (
-      <ArrowDownwardIcon
-        sx={{ color: getColorStringByValue(value), mt: arrowMarginTop }}
-      />
-    );
-  } else {
-    return null;
   }
 };

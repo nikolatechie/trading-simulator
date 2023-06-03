@@ -1,4 +1,5 @@
-import { MONTHS_SHORT, StockTimeRanges } from "../data/constants";
+import { StockTimeRanges } from "../data/constants";
+import { formatDateShort, formatDateLong } from "./helpers.jsx";
 
 // Called after fetching data from the API
 // Formats data and returns it to set state
@@ -10,9 +11,7 @@ export const formatFetchedHistoryData = (data, timeRange) => {
   const formattedData = dates.map((date) => ({
     dateLong: formatDateLong(date),
     dateShort: formatDateShort(date),
-    price: parseFloat(
-      parseFloat(timeSeries[date]["5. adjusted close"]).toFixed(2)
-    ),
+    price: parseFloat(timeSeries[date]["5. adjusted close"]),
   }));
   const chartData = extractDataForChart(formattedData, days, timeRange);
   return {
@@ -46,17 +45,4 @@ export const extractDataForChart = (data, days, timeRange) => {
   }
 
   return data.slice(startDateIdx);
-};
-
-const formatDateShort = (date) => {
-  const month = Number(date.substring(5, 7));
-  const year = Number(date.substring(0, 4));
-  return MONTHS_SHORT[month] + "-" + year;
-};
-
-const formatDateLong = (date) => {
-  const month = Number(date.substring(5, 7));
-  const day = Number(date.substring(8));
-  const year = Number(date.substring(0, 4));
-  return MONTHS_SHORT[month] + "-" + day + "-" + year;
 };

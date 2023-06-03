@@ -14,11 +14,12 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
+import { fetchHoldings } from "../../helpers/portfolio-holdings-helpers.jsx";
 import {
-  fetchHoldings,
+  formatFloat,
+  getColorStringByValue,
   getArrowDirection,
-} from "../../helpers/portfolio-holdings-helpers.jsx";
-import { formatFloat, getColorStringByValue } from "../../helpers/helpers";
+} from "../../helpers/helpers.jsx";
 
 const useStyles = makeStyles((theme) => ({
   tableHeaderCell: {
@@ -101,7 +102,8 @@ export default function PortfolioHoldings(props) {
               fontWeight='bold'
               color={getColorStringByValue(props.stats.totalGainOrLoss)}
             >
-              ${formatFloat(props.stats.totalGainOrLoss)}
+              {props.stats.totalGainOrLoss < 0.0 && "-"}$
+              {formatFloat(Math.abs(props.stats.totalGainOrLoss))}
             </Typography>
             {getArrowDirection(props.stats.totalGainOrLoss)}
           </Box>

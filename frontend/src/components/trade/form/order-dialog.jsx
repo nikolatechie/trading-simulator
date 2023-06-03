@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { StockOrderActions } from "../../../data/constants";
-import { formatFloat } from "../../../helpers/helpers";
+import { formatFloat } from "../../../helpers/helpers.jsx";
 
 const useStyles = makeStyles(() => ({
   rowContainer: {

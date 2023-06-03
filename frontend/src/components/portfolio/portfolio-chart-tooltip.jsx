@@ -1,7 +1,8 @@
 import React from "react";
 import { Typography, Card, CardContent } from "@mui/material";
+import { formatFloat } from "../../helpers/helpers.jsx";
 
-export const CustomChartTooltip = ({ active, payload }) => {
+export const PortfolioChartTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
       <Card variant='outlined'>
@@ -10,7 +11,7 @@ export const CustomChartTooltip = ({ active, payload }) => {
             Date: {payload[0].payload.dateLong}
           </Typography>
           <Typography variant='body1'>
-            Price: {payload[0].payload.price}
+            Total Value: ${formatFloat(payload[0].payload.totalValue)}
           </Typography>
         </CardContent>
       </Card>

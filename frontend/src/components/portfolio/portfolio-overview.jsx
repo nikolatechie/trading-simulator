@@ -1,19 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Paper, Typography, Grid } from "@mui/material";
-import { formatFloat, getColorStringByValue } from "../../helpers/helpers";
-
-const formatChange = (change) => {
-  const valueChange = change.valueChange;
-  let percentageChange = change.percentageChange;
-  if (valueChange !== 0.0 && percentageChange === 0.0) {
-    percentageChange = null;
-  }
-  return {
-    valueChange: "$" + valueChange,
-    percentageChange:
-      percentageChange !== 0.0 ? ` (${formatFloat(percentageChange)}%)` : null,
-  };
-};
+import { formatFloat, getColorStringByValue } from "../../helpers/helpers.jsx";
 
 export default function PortfolioOverview(props) {
   const [change, setChange] = useState({
@@ -39,7 +26,7 @@ export default function PortfolioOverview(props) {
         const data = await response.json();
         if (response.ok) {
           setCash(data.cash);
-          setChange(formatChange(data.todayChange));
+          setChange(data.todayChange);
           setAnnualReturn(data.annualReturn);
         }
       } catch (error) {
@@ -64,14 +51,15 @@ export default function PortfolioOverview(props) {
               fontWeight='bold'
               sx={{ color: getColorStringByValue(change.valueChange) }}
             >
-              {change.valueChange}
+              {change.valueChange < 0.0 && "-"}$
+              {formatFloat(Math.abs(change.valueChange))}
             </Typography>
             <Typography
               variant='body1'
               fontWeight='bold'
               sx={{ color: getColorStringByValue(change.percentageChange) }}
             >
-              {change.percentageChange}
+              ({formatFloat(change.percentageChange)}%)
             </Typography>
           </Grid>
         </Grid>
