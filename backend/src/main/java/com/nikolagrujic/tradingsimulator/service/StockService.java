@@ -3,6 +3,7 @@ package com.nikolagrujic.tradingsimulator.service;
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.constants.Constants.StockExchange;
 import com.nikolagrujic.tradingsimulator.model.StockHolding;
+import com.nikolagrujic.tradingsimulator.model.Transaction;
 import com.nikolagrujic.tradingsimulator.repository.StockHoldingRepository;
 import com.nikolagrujic.tradingsimulator.response.PriceResponse;
 import com.nikolagrujic.tradingsimulator.model.StockInfo;
@@ -24,7 +25,9 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -36,6 +39,7 @@ public class StockService {
     private static final String STOCKS_ENDPOINT = "https://twelve-data1.p.rapidapi.com/stocks";
     private static final String PRICE_ENDPOINT = "https://twelve-data1.p.rapidapi.com/price";
     private final RestTemplate restTemplate = new RestTemplate();
+    private final TransactionService transactionService;
     private final StockInfoRepository stockInfoRepository;
     private final StockHoldingRepository stockHoldingRepository;
     private static final BigDecimal PRICE_TICK = new BigDecimal("0.01");
@@ -43,7 +47,12 @@ public class StockService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StockService.class);
 
     @Autowired
-    public StockService(StockInfoRepository stockInfoRepository, StockHoldingRepository stockHoldingRepository) {
+    public StockService(
+        TransactionService transactionService,
+        StockInfoRepository stockInfoRepository,
+        StockHoldingRepository stockHoldingRepository
+    ) {
+        this.transactionService = transactionService;
         this.stockInfoRepository = stockInfoRepository;
         this.stockHoldingRepository = stockHoldingRepository;
     }
@@ -55,6 +64,27 @@ public class StockService {
     public Page<StockInfo> getListOfStockInfo(String search, Pageable pageable) {
         if (search == null || search.length() < 2) return stockInfoRepository.findAll(pageable);
         return stockInfoRepository.findAll(search, pageable);
+    }
+
+    public StockInfo getRecommendedStock() {
+        LocalDateTime startDate = LocalDateTime.now().minusDays(3);
+        List<Transaction> transactions = transactionService.getRecentTransactions(startDate);
+        Map<String, BigDecimal> values = new HashMap<>();
+        String symbol = null;
+        BigDecimal cashValue = BigDecimal.ZERO;
+        for (Transaction transaction: transactions) {
+            if (values.containsKey(transaction.getSymbol())) {
+                values.put(transaction.getSymbol(), values.get(transaction.getSymbol()).add(transaction.getTradePrice()));
+            } else {
+                values.put(transaction.getSymbol(), transaction.getTradePrice());
+            }
+            BigDecimal currPrice = values.get(transaction.getSymbol());
+            if (currPrice.compareTo(cashValue) > 0) {
+                cashValue = currPrice;
+                symbol = transaction.getSymbol();
+            }
+        }
+        return (symbol == null) ? null : stockInfoRepository.getBySymbol(symbol);
     }
 
     private StockInfo formatStockInfo(StockInfo stockInfo) {

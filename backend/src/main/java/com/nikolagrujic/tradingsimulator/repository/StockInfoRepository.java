@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Repository
 public interface StockInfoRepository extends JpaRepository<StockInfo,Long> {
     boolean existsBySymbol(String symbol);
+    StockInfo getBySymbol(String symbol);
     Page<StockInfo> findAll(Pageable pageable);
 
     @Query("SELECT s.currentPrice FROM StockInfo s WHERE s.symbol = :symbol")

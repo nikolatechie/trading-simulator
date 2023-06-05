@@ -43,4 +43,16 @@ public class StocksController {
             );
         }
     }
+
+    @GetMapping("/recommendation")
+    public ResponseEntity<?> getRecommendedStock() {
+        try {
+            return ResponseEntity.ok(stockService.getRecommendedStock());
+        } catch (Exception e) {
+            LOGGER.error("Failed to retrieve recommended stocks: {}", e.getMessage());
+            return ResponseEntity.status(500).body(
+                new ErrorResponse(e.getMessage())
+            );
+        }
+    }
 }

@@ -117,6 +117,18 @@ public class PortfolioController {
         }
     }
 
+    @GetMapping("/bestWorstStocks")
+    public ResponseEntity<?> getBestAndWorstStocks() {
+        try {
+            return ResponseEntity.ok(portfolioService.getBestAndWorstStocks());
+        } catch (Exception e) {
+            LOGGER.info("Failed to retrieve best and worst performing stocks: {}", e.getMessage());
+            return ResponseEntity.status(500).body(
+                new ErrorResponse(e.getMessage())
+            );
+        }
+    }
+
     @GetMapping("/quantity")
     public ResponseEntity<?> getQuantity(@RequestParam String symbol) {
         try {

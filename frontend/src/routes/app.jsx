@@ -1,5 +1,9 @@
 import React from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  createTheme,
+  StyledEngineProvider,
+  ThemeProvider,
+} from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -54,7 +58,9 @@ export default function App() {
           }}
         >
           <Toolbar />
-          <AppContent selectedPage={selectedPage} />
+          <StyledEngineProvider injectFirst>
+            <AppContent selectedPage={selectedPage} />
+          </StyledEngineProvider>
         </Box>
       </Box>
     </ThemeProvider>

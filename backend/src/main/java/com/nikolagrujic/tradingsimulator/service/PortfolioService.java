@@ -9,6 +9,7 @@ import com.nikolagrujic.tradingsimulator.model.*;
 import com.nikolagrujic.tradingsimulator.repository.PortfolioHistoryRepository;
 import com.nikolagrujic.tradingsimulator.repository.PortfolioRepository;
 import com.nikolagrujic.tradingsimulator.repository.StockHoldingRepository;
+import com.nikolagrujic.tradingsimulator.response.BestWorstStocksResponse;
 import com.nikolagrujic.tradingsimulator.response.PortfolioOverview;
 import com.nikolagrujic.tradingsimulator.response.PortfolioStatsResponse;
 import com.nikolagrujic.tradingsimulator.response.TodayChange;
@@ -130,6 +131,7 @@ public class PortfolioService {
             List<Portfolio> portfolios = portfolioRepository.findAll();
             for (Portfolio portfolio: portfolios) {
                 List<PortfolioHistory> histories = portfolio.getHistory();
+                histories.sort(Comparator.comparing(PortfolioHistory::getId).reversed());
                 PortfolioHistory history = histories.get(0);
                 if (portfolio.getUser().getEmail().equals(email)) {
                     rank = history.getPortfolioRank();
@@ -155,6 +157,39 @@ public class PortfolioService {
             LOGGER.warn(e.getMessage());
             throw new RankCalculationException(e.getMessage());
         }
+    }
+
+    /**
+     * Returns the best and the worst performing stock the user owns.
+     */
+    public BestWorstStocksResponse getBestAndWorstStocks() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<StockHolding> holdings = stockHoldingRepository.getAllByPortfolio_User_Email(email);
+        StockHolding best = null, worst = null;
+        for (StockHolding stockHolding: holdings) {
+            if (best == null) {
+                best = stockHolding;
+            }
+            if (worst == null) {
+                worst = stockHolding;
+            }
+            stockHolding.setCurrentPrice(stockService.getCurrentPrice(stockHolding.getSymbol()));
+            BigDecimal gainOrLoss = new BigDecimal(stockHolding.getQuantity())
+                    .multiply(stockHolding.getCurrentPrice())
+                    .subtract(stockHolding.getPurchasePrice());
+            BigDecimal bestGain = new BigDecimal(best.getQuantity())
+                    .multiply(best.getCurrentPrice())
+                    .subtract(best.getPurchasePrice());
+            BigDecimal worstLoss = new BigDecimal(worst.getQuantity())
+                    .multiply(worst.getCurrentPrice())
+                    .subtract(worst.getPurchasePrice());
+            if (gainOrLoss.compareTo(bestGain) > 0) {
+                best = stockHolding;
+            } else if (gainOrLoss.compareTo(worstLoss) < 0) {
+                worst = stockHolding;
+            }
+        }
+        return new BestWorstStocksResponse(best, worst);
     }
 
     private List<StockHolding> getHoldings(String email) {

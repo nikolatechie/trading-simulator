@@ -46,8 +46,8 @@ public class Transaction {
     @Min(value = 0, message = "Stock quantity needs to be at least 0.")
     private int quantity;
 
-    @Min(value = 0, message = "Purchase price can't be a negative number.")
-    private BigDecimal purchasePrice;
+    @Min(value = 0, message = "Trade price can't be a negative number.")
+    private BigDecimal tradePrice;
 
     @NotNull
     private Constants.OrderDuration duration;

@@ -84,7 +84,7 @@ public class TradeService {
         transaction.setQuantity(tradeOrder.getQuantity());
         transaction.setDuration(tradeOrder.getDuration());
         transaction.setUser(userService.findByEmail(email));
-        transaction.setPurchasePrice(price);
+        transaction.setTradePrice(price);
         transaction.setDateTime(LocalDateTime.now());
         transactionService.save(transaction);
     }

@@ -128,14 +128,11 @@ export default function TransactionsPage() {
                 <TableCell>{transaction.symbol}</TableCell>
                 <TableCell>{transaction.name}</TableCell>
                 <TableCell>
-                  $
-                  {formatFloat(
-                    transaction.purchasePrice / transaction.quantity
-                  )}
+                  ${formatFloat(transaction.tradePrice / transaction.quantity)}
                 </TableCell>
                 <TableCell>{transaction.quantity}</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>
-                  ${formatFloat(transaction.purchasePrice)}
+                  ${formatFloat(transaction.tradePrice)}
                 </TableCell>
                 <TableCell>{transaction.type}</TableCell>
                 <TableCell>{transaction.duration}</TableCell>
