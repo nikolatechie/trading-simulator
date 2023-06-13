@@ -2,8 +2,6 @@ package com.nikolagrujic.tradingsimulator.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +17,6 @@ public class ApiKeyController {
     @Value("${twelvedata.api.key}")
     private String twelveDataApiKey;
     private final ObjectMapper objectMapper;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiKeyController.class);
 
     @Autowired
     public ApiKeyController(ObjectMapper objectMapper) {
@@ -28,7 +25,6 @@ public class ApiKeyController {
 
     @GetMapping("/alpha-vantage")
     public ResponseEntity<?> getAlphaVantageKey() {
-        LOGGER.info("Received a request for the AlphaVantage API key...");
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("apiKey", alphaVantageApiKey);
         return ResponseEntity.ok(objectNode);
@@ -36,7 +32,6 @@ public class ApiKeyController {
 
     @GetMapping("/twelve-data")
     public ResponseEntity<?> getTwelveDataKey() {
-        LOGGER.info("Received a request for the TwelveData API key...");
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("apiKey", twelveDataApiKey);
         return ResponseEntity.ok(objectNode);

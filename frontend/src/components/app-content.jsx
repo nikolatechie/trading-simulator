@@ -4,6 +4,8 @@ import TradePage from "./trade/trade-page";
 import TransactionsPage from "./transactions-page";
 import PortfolioPage from "./portfolio/portfolio-page";
 import Dashboard from "./dashboard/dashboard";
+import Settings from "./settings";
+import ErrorPage from "../routes/error-page";
 
 export const AppContent = (props) => {
   switch (props.selectedPage) {
@@ -17,7 +19,9 @@ export const AppContent = (props) => {
       return <NewsPage />;
     case "Transactions":
       return <TransactionsPage />;
+    case "Settings":
+      return <Settings />;
     default:
-      return <div>{props.selectedPage}</div>;
+      return <ErrorPage />;
   }
 };

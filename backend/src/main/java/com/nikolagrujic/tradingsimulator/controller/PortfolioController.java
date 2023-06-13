@@ -55,7 +55,9 @@ public class PortfolioController {
     @GetMapping("/overview")
     public ResponseEntity<?> getOverview() {
         try {
-            return ResponseEntity.ok(portfolioService.getOverview());
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            LOGGER.info("Retrieving portfolio overview: {}", email);
+            return ResponseEntity.ok(portfolioService.getOverview(email));
         } catch (Exception e) {
             LOGGER.error("An error occurred while retrieving overview: {}", e.getMessage());
             return ResponseEntity.status(500).body(
@@ -68,6 +70,7 @@ public class PortfolioController {
     public ResponseEntity<?> getPortfolioStats() {
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            LOGGER.info("Retrieving portfolio stats: {}", email);
             return ResponseEntity.ok(portfolioService.getPortfolioStats(email));
         } catch (Exception e) {
             LOGGER.error("Couldn't retrieve portfolio stats: {}", e.getMessage());
@@ -81,6 +84,7 @@ public class PortfolioController {
     public ResponseEntity<?> getPortfolioRank() {
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            LOGGER.info("Retrieving portfolio rank: {}", email);
             return ResponseEntity.ok(portfolioService.getPortfolioRank(email));
         } catch (Exception e) {
             LOGGER.error("Failed to retrieve the user rank: {}", e.getMessage());
@@ -108,7 +112,9 @@ public class PortfolioController {
     @GetMapping("/history")
     public ResponseEntity<?> getPortfolioHistory() {
         try {
-            return ResponseEntity.ok(portfolioService.getPortfolioHistory());
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            LOGGER.info("Retrieving portfolio history: {}", email);
+            return ResponseEntity.ok(portfolioService.getPortfolioHistory(email));
         } catch (Exception e) {
             LOGGER.info("Failed to retrieve portfolio history: {}", e.getMessage());
             return ResponseEntity.status(500).body(
@@ -120,7 +126,9 @@ public class PortfolioController {
     @GetMapping("/bestWorstStocks")
     public ResponseEntity<?> getBestAndWorstStocks() {
         try {
-            return ResponseEntity.ok(portfolioService.getBestAndWorstStocks());
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            LOGGER.info("Retrieving best and worst performing stocks: {}", email);
+            return ResponseEntity.ok(portfolioService.getBestAndWorstStocks(email));
         } catch (Exception e) {
             LOGGER.info("Failed to retrieve best and worst performing stocks: {}", e.getMessage());
             return ResponseEntity.status(500).body(

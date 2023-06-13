@@ -11,10 +11,12 @@ import { formatFloat } from "../../helpers/helpers";
 
 export default function RecommendedStock() {
   const [stock, setStock] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchRecommendedStock = async () => {
       try {
+        setLoading(true);
         const token = localStorage.getItem("jwt");
         const response = await fetch(
           "http://localhost:8080/api/stocks/recommendation",
@@ -25,6 +27,7 @@ export default function RecommendedStock() {
             },
           }
         );
+        setLoading(false);
         const data = await response.json();
         if (response.ok) {
           setStock(data);
@@ -32,6 +35,7 @@ export default function RecommendedStock() {
           alert(data.errorMessage);
         }
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     };
@@ -40,32 +44,34 @@ export default function RecommendedStock() {
 
   return (
     <Box component={Paper} elevation={3} padding={2} height='100%'>
-      {stock === null ? (
-        <CircularProgress size={30} />
-      ) : (
+      <Box>
+        <Typography variant='h6'>Recommended Stock</Typography>
         <Box>
-          <Typography variant='h6'>Recommended Stock</Typography>
-          <Box>
-            <Divider style={{ margin: "10px 0" }} />
-            <Box display='flex'>
-              <Typography variant='h6'>{stock.symbol}</Typography>
-              <Box ml={3}>
-                <Typography variant='subtitle1'>{stock.name}</Typography>
-                <Typography variant='body2'>{stock.exchange}</Typography>
-                <Typography variant='h6'>
-                  ${formatFloat(stock.currentPrice)}
-                </Typography>
+          <Divider style={{ margin: "10px 0" }} />
+          {loading || stock === null ? (
+            <CircularProgress size={30} />
+          ) : (
+            <Box>
+              <Box display='flex'>
+                <Typography variant='h6'>{stock.symbol}</Typography>
+                <Box ml={3}>
+                  <Typography variant='subtitle1'>{stock.name}</Typography>
+                  <Typography variant='body2'>{stock.exchange}</Typography>
+                  <Typography variant='h6'>
+                    ${formatFloat(stock.currentPrice)}
+                  </Typography>
+                </Box>
+              </Box>
+              <Divider style={{ margin: "10px 0" }} />
+              <Box display='flex' justifyContent='flex-end'>
+                <Button variant='outlined' color='primary'>
+                  Trade
+                </Button>
               </Box>
             </Box>
-            <Divider style={{ margin: "10px 0" }} />
-            <Box display='flex' justifyContent='flex-end'>
-              <Button variant='outlined' color='primary'>
-                Trade
-              </Button>
-            </Box>
-          </Box>
+          )}
         </Box>
-      )}
+      </Box>
     </Box>
   );
 }

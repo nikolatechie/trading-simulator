@@ -65,8 +65,7 @@ public class PortfolioService {
     }
 
     // Returns cash balance, today's change, and annual return
-    public PortfolioOverview getOverview() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public PortfolioOverview getOverview(String email) {
         PortfolioOverview portfolioOverview = new PortfolioOverview();
         BigDecimal cash = getAvailableCash(email);
         BigDecimal stockVal = getPortfolioStats(email).getTotalValue();
@@ -162,8 +161,7 @@ public class PortfolioService {
     /**
      * Returns the best and the worst performing stock the user owns.
      */
-    public BestWorstStocksResponse getBestAndWorstStocks() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public BestWorstStocksResponse getBestAndWorstStocks(String email) {
         List<StockHolding> holdings = stockHoldingRepository.getAllByPortfolio_User_Email(email);
         StockHolding best = null, worst = null;
         for (StockHolding stockHolding: holdings) {
@@ -193,7 +191,7 @@ public class PortfolioService {
     }
 
     private List<StockHolding> getHoldings(String email) {
-        LOGGER.info("Retrieving portfolio stats: {}", email);
+        LOGGER.info("Retrieving stock holdings: {}", email);
         List<StockHolding> stockHoldings = stockHoldingRepository.getAllByPortfolio_User_Email(email);
         for (StockHolding stockHolding: stockHoldings) {
             stockHolding.setCurrentPrice(stockService.getCurrentPrice(stockHolding.getSymbol()));
@@ -239,8 +237,7 @@ public class PortfolioService {
         return countHigher + 1L;
     }
 
-    public List<PortfolioHistory> getPortfolioHistory() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public List<PortfolioHistory> getPortfolioHistory(String email) {
         return historyRepository.findByPortfolio_User_EmailOrderByDateAsc(email);
     }
 

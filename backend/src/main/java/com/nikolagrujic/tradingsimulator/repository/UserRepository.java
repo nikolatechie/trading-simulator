@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
     User findByEmail(String email);
+    void deleteByEmail(String email);
 
     @Query("SELECT u.verificationDate FROM User u WHERE u.email = :email")
     LocalDate getVerificationDate(@Param("email") String email);

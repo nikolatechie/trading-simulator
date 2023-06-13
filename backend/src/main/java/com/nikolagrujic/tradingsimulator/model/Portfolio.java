@@ -25,10 +25,10 @@ public class Portfolio {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StockHolding> stockHoldings;
 
-    @OneToMany(mappedBy = "portfolio", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "portfolio", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PortfolioHistory> history = new ArrayList<>();
 
     @Column(columnDefinition = "decimal(19, 2) default 30000.00")

@@ -34,7 +34,7 @@ Before running the application, ensure that the following software is installed 
 
 1. Clone the repository.
 2. Navigate to the project's `backend` directory.
-3. Configure the application by modifying the `application.properties` file. Update the database connection details and other relevant configurations such as API keys.
+3. Configure the application by creating the `application.properties` file. Add the database connection details and other relevant configurations such as API keys.
 4. Install the backend dependencies and build the Spring Boot application.
 5. Navigate to the `frontend` directory and install the frontend dependencies: `npm install`
 6. Run the React.js frontend: `npm start`

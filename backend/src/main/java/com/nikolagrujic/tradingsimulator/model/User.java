@@ -45,7 +45,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private EmailVerificationToken emailVerificationToken;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Portfolio portfolio;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

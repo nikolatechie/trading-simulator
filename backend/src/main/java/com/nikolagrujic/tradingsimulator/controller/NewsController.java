@@ -33,7 +33,6 @@ public class NewsController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "publishedAt") String sortBy) {
         try {
-            LOGGER.info("Retrieving news articles...");
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
             Page<NewsArticle> articles = newsService.getNewsArticles(pageable);
             return ResponseEntity.ok(articles);
