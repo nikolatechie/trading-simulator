@@ -105,7 +105,14 @@ export default function StockSearch(props) {
 
   return (
     <>
-      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          mt: 1,
+        }}
+      >
         <TextField
           className={classes.search}
           variant='standard'

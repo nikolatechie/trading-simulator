@@ -38,7 +38,6 @@ public class PortfolioService {
     private final StockService stockService;
     private UserService userService;
     private final ObjectMapper objectMapper;
-    private static final long SAVE_PORTFOLIO_HISTORY_PERIOD_MILLISECONDS = 24 * 60 * 60 * 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(PortfolioService.class);
 
     @Autowired
@@ -278,10 +277,7 @@ public class PortfolioService {
     }
 
     @Async
-    @Scheduled(
-        initialDelay = Constants.REQUEST_LONG_DELAY_MILLISECONDS,
-        fixedDelay = SAVE_PORTFOLIO_HISTORY_PERIOD_MILLISECONDS
-    )
+    @Scheduled(cron = "0 0 18 * * *", zone = "America/New_York")
     // Saves the total value of portfolios each day to track users' performance.
     public void savePortfolioHistory() {
         List<Portfolio> portfolios = portfolioRepository.findAll();

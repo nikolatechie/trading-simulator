@@ -32,7 +32,7 @@ export default function RecommendedStock() {
         if (response.ok) {
           setStock(data);
         } else {
-          alert(data.errorMessage);
+          console.log(data);
         }
       } catch (error) {
         setLoading(false);
@@ -48,9 +48,13 @@ export default function RecommendedStock() {
         <Typography variant='h6'>Recommended Stock</Typography>
         <Box>
           <Divider style={{ margin: "10px 0" }} />
-          {loading || stock === null ? (
-            <CircularProgress size={30} />
-          ) : (
+          {loading && <CircularProgress size={30} />}
+          {!loading && stock === null && (
+            <Typography fontStyle='italic'>
+              Failed to fetch recommended stock.
+            </Typography>
+          )}
+          {!loading && stock !== null && (
             <Box>
               <Box display='flex'>
                 <Typography variant='h6'>{stock.symbol}</Typography>

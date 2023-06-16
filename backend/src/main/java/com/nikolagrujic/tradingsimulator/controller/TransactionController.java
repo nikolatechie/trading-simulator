@@ -30,18 +30,36 @@ public class TransactionController {
 
     @GetMapping
     public ResponseEntity<?> getUserTransactions(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "dateTime") String sortBy
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "dateTime") String sortBy,
+            @RequestParam(defaultValue = "false") boolean recent,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String searchTerm
     ) {
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             LOGGER.info("Retrieving user transactions: {}", email);
             Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-            Page<Transaction> transactions = transactionService.getUserTransactions(pageable, email);
+            Page<Transaction> transactions = (recent) ?
+                    transactionService.getRecentTransactions(email, pageable) :
+                    transactionService.getUserTransactions(pageable, email, startDate, endDate, searchTerm);
             return ResponseEntity.ok(transactions);
         } catch (Exception e) {
             LOGGER.error("Couldn't retrieve transactions: {}", e.getMessage());
+            return ResponseEntity.status(500).body(
+                new ErrorResponse(e.getMessage())
+            );
+        }
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<?> getStats() {
+        try {
+            return ResponseEntity.ok(transactionService.getStats());
+        } catch (Exception e) {
+            LOGGER.error("Couldn't retrieve stats: {}", e.getMessage());
             return ResponseEntity.status(500).body(
                 new ErrorResponse(e.getMessage())
             );

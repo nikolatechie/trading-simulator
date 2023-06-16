@@ -2,6 +2,7 @@ package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.constants.Constants.StockExchange;
+import com.nikolagrujic.tradingsimulator.exception.StockRecommendationException;
 import com.nikolagrujic.tradingsimulator.model.StockHolding;
 import com.nikolagrujic.tradingsimulator.model.Transaction;
 import com.nikolagrujic.tradingsimulator.repository.StockHoldingRepository;
@@ -44,6 +45,7 @@ public class StockService {
     private final StockHoldingRepository stockHoldingRepository;
     private static final BigDecimal PRICE_TICK = new BigDecimal("0.01");
     private static final long PULL_STOCK_PRICES_PERIOD_MILLISECONDS = 30 * 60 * 1000;
+    private static final int STOCK_RECOMMENDATION_DAYS = 5;
     private static final Logger LOGGER = LoggerFactory.getLogger(StockService.class);
 
     @Autowired
@@ -67,7 +69,7 @@ public class StockService {
     }
 
     public StockInfo getRecommendedStock() {
-        LocalDateTime startDate = LocalDateTime.now().minusDays(3);
+        LocalDateTime startDate = LocalDateTime.now().minusDays(STOCK_RECOMMENDATION_DAYS);
         List<Transaction> transactions = transactionService.getRecentTransactions(startDate);
         Map<String, BigDecimal> values = new HashMap<>();
         String symbol = null;
@@ -84,7 +86,10 @@ public class StockService {
                 symbol = transaction.getSymbol();
             }
         }
-        return (symbol == null) ? null : stockInfoRepository.getBySymbol(symbol);
+        if (symbol == null) {
+            throw new StockRecommendationException("No recent transactions found.");
+        }
+        return stockInfoRepository.getBySymbol(symbol);
     }
 
     private StockInfo formatStockInfo(StockInfo stockInfo) {

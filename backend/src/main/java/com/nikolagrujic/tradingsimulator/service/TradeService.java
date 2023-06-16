@@ -17,7 +17,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Service
 public class TradeService {
@@ -49,6 +52,7 @@ public class TradeService {
     }
 
     public ObjectNode placeOrder(TradeOrder tradeOrder) throws Exception {
+        checkMarketIsOpen();
         String email = getUserEmail();
         LOGGER.info("[{}] Placing a trade order: {}", email, tradeOrder.toString());
         boolean locked = setPortfolioLock(email, true); // Lock portfolio
@@ -62,6 +66,40 @@ public class TradeService {
         }
         setPortfolioLock(email, false); // Unlock portfolio
         return result;
+    }
+
+    private void checkMarketIsOpen() throws InvalidOrderException {
+        // Specify the market time zone
+        ZoneId marketTimeZone = ZoneId.of("America/New_York");
+
+        // Convert the local date and time to the New York time zone
+        LocalDateTime dateTime = LocalDateTime.now(marketTimeZone);
+
+        if (dateTime.getDayOfWeek().equals(DayOfWeek.SATURDAY) || dateTime.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            throw new InvalidOrderException("The market is closed. It will open on Monday at 9:30am.");
+        }
+        if (dateTime.getHour() < 9 || (dateTime.getHour() == 9 && dateTime.getMinute() < 30)) {
+            LocalDateTime openDateTime = LocalDateTime.of(
+                dateTime.getYear(),
+                dateTime.getMonth(),
+                dateTime.getDayOfMonth(),
+                9,
+                30
+            );
+            Duration duration = Duration.between(dateTime, openDateTime);
+            long hours = duration.toHours();
+            long minutes = duration.toMinutes() % 60;
+            throw new InvalidOrderException(
+                "The market is closed. It will open in " + hours + "h " + minutes + "min."
+            );
+        }
+        if (dateTime.getHour() >= 16) {
+            String openingDay = dateTime.getDayOfWeek().equals(DayOfWeek.FRIDAY) ? "on Monday" : "tomorrow";
+            throw new InvalidOrderException(
+                "The market is closed. It will open " + openingDay + " at 9:30am."
+            );
+        }
+        // At this point, the market is open
     }
 
     @Transactional

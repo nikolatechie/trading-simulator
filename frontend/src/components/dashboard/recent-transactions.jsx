@@ -42,7 +42,7 @@ export default function RecentTransactions() {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/transaction?size=3",
+          "http://localhost:8080/api/transaction?recent=true&size=3",
           {
             headers: {
               "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export default function RecentTransactions() {
         if (response.ok) {
           setTransactions(data.content);
         } else {
-          alert(data.errorMessage);
+          console.log(data);
         }
       } catch (error) {
         console.log(error);
