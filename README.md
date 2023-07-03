@@ -20,7 +20,17 @@ Trading Simulator is a web application developed using **Java Spring Boot**, **R
 
 ## Screenshots
 
-*Will be added upon project completion.*
+![Landing page](/frontend/screenshots/landing-page.png)
+![Registration page](/frontend/screenshots/register.png)
+![Login page](/frontend/screenshots/login.png)
+![Dashboard page](/frontend/screenshots/dashboard.png)
+![Portfolio page](/frontend/screenshots/portfolio.png)
+![Trade page](/frontend/screenshots/trade.png)
+![Stock details and trade form](/frontend/screenshots/trade-form.png)
+![Trade preview](/frontend/screenshots/trade-confirm.png)
+![News page](/frontend/screenshots/news.png)
+![Transactions page](/frontend/screenshots/transactions.png)
+![Settings page](/frontend/screenshots/settings.png)
 
 ## Prerequisites
 

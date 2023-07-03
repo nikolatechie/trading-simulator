@@ -95,18 +95,7 @@ export default function TransactionsPage() {
 
   const handleSearch = async () => {
     setPage(0);
-    const response = await fetchTransactions(
-      page,
-      startDate,
-      endDate,
-      searchTerm
-    );
-    if (response.errorMessage) {
-      alert(response.errorMessage);
-    } else {
-      setTransactions(response.content);
-      setTotalPages(response.totalPages);
-    }
+    await fetchTransactions(page, startDate, endDate, searchTerm);
   };
 
   return (
