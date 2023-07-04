@@ -3,7 +3,7 @@ import { Box, Button, TextField } from "@mui/material";
 
 export default function TransactionsFilter(props) {
   return (
-    <Box display='flex' alignItems='end' gap={2}>
+    <Box display='flex' alignItems='end' gap={2} mb={2}>
       <TextField
         id='start-date'
         type='date'
