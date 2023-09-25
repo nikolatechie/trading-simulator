@@ -25,9 +25,13 @@ export default function StockChart(props) {
     const fetchStockData = async () => {
       try {
         const response = await fetch(
-          `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${props.symbol}&outputsize=full&apikey=${props.alphaVantageApiKey}`,
+          `https://alpha-vantage.p.rapidapi.com/query?function=TIME_SERIES_DAILY_ADJUSTED&datatype=json&symbol=${props.symbol}&outputsize=full`,
           {
             method: "GET",
+            headers: {
+              "X-RapidAPI-Key": props.rapidApiKey,
+              "X-RapidAPI-Host": "alpha-vantage.p.rapidapi.com",
+            },
           }
         );
         if (response.ok) {

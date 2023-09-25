@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiKeyController {
     @Value("${alphavantage.api.key}")
     private String alphaVantageApiKey;
-    @Value("${twelvedata.api.key}")
-    private String twelveDataApiKey;
+    @Value("${rapid.api.key}")
+    private String rapidApiKey;
     private final ObjectMapper objectMapper;
 
     @Autowired
@@ -24,16 +24,16 @@ public class ApiKeyController {
     }
 
     @GetMapping("/alpha-vantage")
-    public ResponseEntity<?> getAlphaVantageKey() {
+    public ResponseEntity<?> getAlphaVantageApiKey() {
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("apiKey", alphaVantageApiKey);
         return ResponseEntity.ok(objectNode);
     }
 
-    @GetMapping("/twelve-data")
-    public ResponseEntity<?> getTwelveDataKey() {
+    @GetMapping("/rapid-api")
+    public ResponseEntity<?> getRapidApiKey() {
         ObjectNode objectNode = objectMapper.createObjectNode();
-        objectNode.put("apiKey", twelveDataApiKey);
+        objectNode.put("apiKey", rapidApiKey);
         return ResponseEntity.ok(objectNode);
     }
 }

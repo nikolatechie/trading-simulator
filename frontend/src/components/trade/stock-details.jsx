@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
 export default function StockDetails({ stock, handleFormatQuote }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const alphaVantageApiKey = useRef(null);
-  const twelveDataApiKey = useRef(null);
+  const rapidApiKey = useRef(null);
   const classes = useStyles();
 
   useEffect(() => {
@@ -43,8 +43,8 @@ export default function StockDetails({ stock, handleFormatQuote }) {
           const data = await alphaVantageResponse.json();
           alphaVantageApiKey.current = data.apiKey;
         }
-        const twelveDataResponse = await fetch(
-          "http://localhost:8080/api/key/twelve-data",
+        const rapidApiResponse = await fetch(
+          "http://localhost:8080/api/key/rapid-api",
           {
             method: "GET",
             headers: {
@@ -53,9 +53,9 @@ export default function StockDetails({ stock, handleFormatQuote }) {
             },
           }
         );
-        if (twelveDataResponse.ok) {
-          const data = await twelveDataResponse.json();
-          twelveDataApiKey.current = data.apiKey;
+        if (rapidApiResponse.ok) {
+          const data = await rapidApiResponse.json();
+          rapidApiKey.current = data.apiKey;
         }
       } catch (err) {
         console.log(err);
@@ -87,7 +87,7 @@ export default function StockDetails({ stock, handleFormatQuote }) {
             {
               method: "GET",
               headers: {
-                "X-RapidAPI-Key": twelveDataApiKey.current,
+                "X-RapidAPI-Key": rapidApiKey.current,
                 "X-RapidAPI-Host": "twelve-data1.p.rapidapi.com",
               },
             }
@@ -158,10 +158,7 @@ export default function StockDetails({ stock, handleFormatQuote }) {
         <QuoteInfoList state={state} />
       </Grid>
       <Grid item xs={7} sx={{ display: "flex", flexDirection: "column" }}>
-        <StockChart
-          symbol={stock.symbol}
-          alphaVantageApiKey={alphaVantageApiKey.current}
-        />
+        <StockChart symbol={stock.symbol} rapidApiKey={rapidApiKey.current} />
       </Grid>
     </Grid>
   );

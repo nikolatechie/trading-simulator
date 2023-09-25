@@ -33,7 +33,7 @@ import java.util.Objects;
 
 @Service
 public class StockService {
-    @Value("${twelvedata.api.key}")
+    @Value("${rapid.api.key}")
     private String apiKey;
     @Value("${twelvedata.api.host}")
     private String apiHost;
