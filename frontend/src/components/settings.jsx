@@ -23,12 +23,12 @@ export default function Settings() {
       if (response.errorMessage) {
         alert(response.errorMessage);
       } else {
-        setState({
-          ...state,
+        setState(prevState => ({
+          ...prevState,
           firstName: response.firstName,
           lastName: response.lastName,
           email: response.email,
-        });
+        }));
       }
     };
     fetchData();

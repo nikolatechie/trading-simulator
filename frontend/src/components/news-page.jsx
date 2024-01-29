@@ -94,7 +94,7 @@ export default function NewsPage() {
     return () => {
       observer.disconnect();
     };
-  }, [state.hasMore, state.isLoading]);
+  }, [state.hasMore, state.isLoading, state.canFetchArticles]);
 
   return (
     <Box

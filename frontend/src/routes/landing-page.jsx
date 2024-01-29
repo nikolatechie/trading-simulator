@@ -27,9 +27,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function LandingPage() {
-  if (isUserAuthenticated()) return <Navigate to='/app' replace />;
   const navigate = useNavigate();
   const classes = useStyles();
+  if (isUserAuthenticated()) return <Navigate to='/app' replace />;
 
   return (
     <Box sx={{ flexGrow: 1, width: "90%", margin: "0 auto" }}>
