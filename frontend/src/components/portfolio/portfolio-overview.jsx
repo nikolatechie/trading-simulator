@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Paper, Typography, Grid } from "@mui/material";
 import { formatFloat, getColorStringByValue } from "../../helpers/helpers.jsx";
+import { BASE_API_URL, ENDPOINTS } from '../../data/constants.js';
 
 export default function PortfolioOverview(props) {
   const [change, setChange] = useState({
@@ -15,7 +16,7 @@ export default function PortfolioOverview(props) {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/portfolio/overview",
+          `${BASE_API_URL}${ENDPOINTS.PORTFOLIO_OVERVIEW}`,
           {
             headers: {
               "Content-Type": "application/json",

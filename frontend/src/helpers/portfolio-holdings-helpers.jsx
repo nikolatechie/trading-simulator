@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography } from "@mui/material";
 import { formatFloat, getColorStringByValue } from "./helpers.jsx";
+import { BASE_API_URL, ENDPOINTS } from '../data/constants.js';
 
 const getTotalGainOrLoss = (quantity, price, totalPurchasePrice) => {
   const totalGainOrLoss = quantity * price - totalPurchasePrice;
@@ -35,7 +36,7 @@ export const fetchHoldings = async (page) => {
   try {
     const token = localStorage.getItem("jwt");
     const response = await fetch(
-      `http://localhost:8080/api/portfolio/holdings?page=${page}`,
+      `${BASE_API_URL}${ENDPOINTS.PORTFOLIO_HOLDINGS}?page=${page}`,
       {
         method: "GET",
         headers: {

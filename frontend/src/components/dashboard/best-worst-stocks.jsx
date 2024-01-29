@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, Paper, Typography } from "@mui/material";
 import { formatFloat, getColorStringByValue } from "../../helpers/helpers";
+import { BASE_API_URL, ENDPOINTS } from '../../data/constants';
 
 export default function BestWorstStocks() {
   const [stocks, setStocks] = useState(null);
@@ -12,7 +13,7 @@ export default function BestWorstStocks() {
         setLoading(true);
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/portfolio/bestWorstStocks",
+          `${BASE_API_URL}${ENDPOINTS.PORTFOLIO_BEST_WORST_STOCKS}`,
           {
             headers: {
               "Content-Type": "application/json",

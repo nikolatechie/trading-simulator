@@ -8,6 +8,7 @@ import {
   Divider,
 } from "@mui/material";
 import { formatFloat } from "../../helpers/helpers";
+import { BASE_API_URL, ENDPOINTS } from '../../data/constants';
 
 export default function RecommendedStock() {
   const [stock, setStock] = useState(null);
@@ -19,7 +20,7 @@ export default function RecommendedStock() {
         setLoading(true);
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/stocks/recommendation",
+          `${BASE_API_URL}${ENDPOINTS.STOCK_RECOMMENDATION}`,
           {
             headers: {
               "Content-Type": "application/json",

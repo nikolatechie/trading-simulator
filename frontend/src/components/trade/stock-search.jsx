@@ -15,7 +15,7 @@ import {
   Pagination,
   CircularProgress,
 } from "@mui/material";
-import { PAGE_SIZE, ActionTypes } from "../../data/constants";
+import { PAGE_SIZE, ActionTypes, BASE_API_URL, ENDPOINTS } from "../../data/constants";
 import {
   reducer,
   initialState,
@@ -61,7 +61,7 @@ export default function StockSearch(props) {
         searchTerm.current.value !== ""
           ? `&search=${searchTerm.current.value}`
           : "";
-      const url = `http://localhost:8080/api/stocks?page=${state.page}${searchParam}`;
+      const url = `${BASE_API_URL}${ENDPOINTS.STOCKS}?page=${state.page}${searchParam}`;
       const response = await fetch(url, {
         method: "GET",
         headers: {

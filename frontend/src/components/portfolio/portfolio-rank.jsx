@@ -1,6 +1,7 @@
 import { Box, CircularProgress, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { formatFloat, getArrowDirection } from "../../helpers/helpers.jsx";
+import { BASE_API_URL, ENDPOINTS } from '../../data/constants.js';
 
 export default function PortfolioRank() {
   const [rank, setRank] = useState(null);
@@ -10,7 +11,7 @@ export default function PortfolioRank() {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/portfolio/rank",
+          `${BASE_API_URL}${ENDPOINTS.PORTFOLIO_RANK}`,
           {
             headers: {
               "Content-Type": "application/json",

@@ -5,6 +5,7 @@ import PerformanceChart from "../portfolio/performance-chart";
 import BestWorstStocks from "./best-worst-stocks";
 import RecentTransactions from "./recent-transactions";
 import RecommendedStock from "./recommended-stock";
+import { BASE_API_URL, ENDPOINTS } from '../../data/constants';
 
 export default function Dashboard() {
   const [portfolioStats, setPortfolioStats] = useState({
@@ -17,7 +18,7 @@ export default function Dashboard() {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/portfolio/stats",
+          `${BASE_API_URL}${ENDPOINTS.PORTFOLIO_STATS}`,
           {
             method: "GET",
             headers: {

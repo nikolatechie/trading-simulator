@@ -4,6 +4,7 @@ import PortfolioHoldings from "./portfolio-holdings";
 import PerformanceChart from "./performance-chart";
 import PortfolioOverview from "./portfolio-overview";
 import PortfolioRank from "./portfolio-rank";
+import { BASE_API_URL, ENDPOINTS } from '../../data/constants';
 
 export default function PortfolioPage() {
   const [portfolioStats, setPortfolioStats] = useState({
@@ -16,7 +17,7 @@ export default function PortfolioPage() {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/portfolio/stats",
+          `${BASE_API_URL}${ENDPOINTS.PORTFOLIO_STATS}`,
           {
             method: "GET",
             headers: {

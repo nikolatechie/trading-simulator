@@ -1,3 +1,5 @@
+import { BASE_API_URL, ENDPOINTS } from '../data/constants';
+
 export const initialState = {
   firstName: "",
   lastName: "",
@@ -12,7 +14,7 @@ export const fetchInfo = async () => {
   try {
     const token = localStorage.getItem("jwt");
     const response = await fetch(
-      "http://localhost:8080/api/user/settingsInfo",
+      `${BASE_API_URL}${ENDPOINTS.USER_SETTINGS_INFO}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +52,7 @@ export const saveUpdates = async (state) => {
   }
   try {
     const token = localStorage.getItem("jwt");
-    const response = await fetch("http://localhost:8080/api/user/update", {
+    const response = await fetch(`${BASE_API_URL}${ENDPOINTS.USER_UPDATE}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +79,7 @@ export const saveUpdates = async (state) => {
 export const deleteAccount = async () => {
   try {
     const token = localStorage.getItem("jwt");
-    const response = await fetch("http://localhost:8080/api/user", {
+    const response = await fetch(`${BASE_API_URL}${ENDPOINTS.USER}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

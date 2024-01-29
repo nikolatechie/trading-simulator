@@ -2,6 +2,8 @@ import {
   StockOrderActions,
   StockOrderTypes,
   StockOrderDurations,
+  BASE_API_URL,
+  ENDPOINTS,
 } from "../data/constants";
 
 export const initialState = {
@@ -23,7 +25,7 @@ export const getDurationKey = (val) => {
 export const fetchAvailableCash = async () => {
   try {
     const token = localStorage.getItem("jwt");
-    const response = await fetch("http://localhost:8080/api/portfolio/cash", {
+    const response = await fetch(`${BASE_API_URL}${ENDPOINTS.PORTFOLIO_CASH}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +46,7 @@ export const fetchQuantity = async (symbol) => {
   try {
     const token = localStorage.getItem("jwt");
     const response = await fetch(
-      `http://localhost:8080/api/portfolio/quantity?symbol=${symbol}`,
+      `${BASE_API_URL}${ENDPOINTS.PORTFOLIO_QUANTITY}?symbol=${symbol}`,
       {
         method: "GET",
         headers: {
@@ -80,7 +82,7 @@ export const getMaxQuantity = async (action, symbol, askPrice) => {
 export const placeTradeOrder = async (tradeOrder) => {
   try {
     const token = localStorage.getItem("jwt");
-    const response = await fetch("http://localhost:8080/api/trade", {
+    const response = await fetch(`${BASE_API_URL}${ENDPOINTS.TRADE}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

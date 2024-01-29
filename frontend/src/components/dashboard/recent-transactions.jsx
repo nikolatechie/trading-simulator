@@ -4,6 +4,7 @@ import { formatDateTime, formatFloat } from "../../helpers/helpers";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { makeStyles } from "@mui/styles";
+import { BASE_API_URL, ENDPOINTS } from '../../data/constants';
 
 const useStyles = makeStyles((theme) => ({
   transactionList: {
@@ -42,7 +43,7 @@ export default function RecentTransactions() {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/transaction?recent=true&size=3",
+          `${BASE_API_URL}${ENDPOINTS.TRANSACTION}?recent=true&size=3`,
           {
             headers: {
               "Content-Type": "application/json",

@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
+import { BASE_API_URL, ENDPOINTS } from '../data/constants';
 
 export default function EmailVerificationPage() {
   const [searchParams] = useSearchParams();
@@ -12,7 +13,7 @@ export default function EmailVerificationPage() {
       try {
         const token = searchParams.get("token");
         const response = await fetch(
-          `http://localhost:8080/api/verify-email?token=${token}`,
+          `${BASE_API_URL}${ENDPOINTS.VERIFY_EMAIL}?token=${token}`,
           {
             method: "GET",
             headers: {

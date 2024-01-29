@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { PortfolioChartTooltip } from "./portfolio-chart-tooltip";
 import { formatDateShort, formatDateLong } from "../../helpers/helpers.jsx";
-import { STARTING_CASH_BALANCE } from "../../data/constants";
+import { BASE_API_URL, ENDPOINTS, STARTING_CASH_BALANCE } from "../../data/constants";
 
 const formatChartData = (chartData) => {
   const SUBTRACT_PERCENTAGE_OFFSET = 0.05;
@@ -49,7 +49,7 @@ export default function PerformanceChart() {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          "http://localhost:8080/api/portfolio/history",
+          `${BASE_API_URL}${ENDPOINTS.PORTFOLIO_HISTORY}`,
           {
             headers: {
               "Content-Type": "application/json",

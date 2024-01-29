@@ -13,6 +13,7 @@ import { CircularProgress } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { BASE_API_URL, ENDPOINTS } from '../data/constants';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function RegisterPage() {
     event.preventDefault();
     setLoading(true);
     const data = new FormData(event.currentTarget);
-    fetch("http://localhost:8080/api/register", {
+    fetch(`${BASE_API_URL}${ENDPOINTS.REGISTER}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

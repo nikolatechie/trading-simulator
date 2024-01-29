@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useReducer } from "react";
 import { Alert, Typography, CircularProgress, Grid, Box } from "@mui/material";
-import { ActionTypes } from "../../data/constants";
+import { ActionTypes, BASE_API_URL, ENDPOINTS } from "../../data/constants";
 import { initialState, reducer } from "../../helpers/stock-details-helpers.jsx";
 import StockChart from "./stock-chart";
 import { StockPriceAndChange } from "./stock-price-change";
@@ -30,7 +30,7 @@ export default function StockDetails({ stock, handleFormatQuote }) {
       try {
         const token = localStorage.getItem("jwt");
         const alphaVantageResponse = await fetch(
-          "http://localhost:8080/api/key/alpha-vantage",
+          `${BASE_API_URL}${ENDPOINTS.ALPHA_VANTAGE_KEY}`,
           {
             method: "GET",
             headers: {
@@ -44,7 +44,7 @@ export default function StockDetails({ stock, handleFormatQuote }) {
           alphaVantageApiKey.current = data.apiKey;
         }
         const rapidApiResponse = await fetch(
-          "http://localhost:8080/api/key/rapid-api",
+          `${BASE_API_URL}${ENDPOINTS.RAPID_API_KEY}`,
           {
             method: "GET",
             headers: {

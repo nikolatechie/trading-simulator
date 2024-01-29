@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from "react";
 import { ArticleCard } from "./article-card";
 import { Alert, Box, CircularProgress } from "@mui/material";
-import { ActionTypes } from "../data/constants";
+import { BASE_API_URL, ENDPOINTS, ActionTypes } from "../data/constants";
 
 const initialState = {
   articles: [],
@@ -47,7 +47,7 @@ export default function NewsPage() {
       try {
         const token = localStorage.getItem("jwt");
         const response = await fetch(
-          `http://localhost:8080/api/news?page=${state.page}`,
+          `${BASE_API_URL}${ENDPOINTS.NEWS}?page=${state.page}`,
           {
             method: "GET",
             headers: {

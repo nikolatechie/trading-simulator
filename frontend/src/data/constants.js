@@ -1,3 +1,32 @@
+const SERVER_PORT = 8080;
+export const BASE_API_URL = `http://localhost:${SERVER_PORT}/api`;
+export const ENDPOINTS = {
+  STOCKS: "/stocks",
+  PORTFOLIO: "/portfolio",
+  PORTFOLIO_CASH: "/portfolio/cash",
+  PORTFOLIO_STATS: "/portfolio/stats",
+  PORTFOLIO_HISTORY: "/portfolio/history",
+  PORTFOLIO_OVERVIEW: "/portfolio/overview",
+  PORTFOLIO_RANK: "/portfolio/rank",
+  PORTFOLIO_HOLDINGS: "/portfolio/holdings",
+  PORTFOLIO_QUANTITY: "/portfolio/quantity",
+  PORTFOLIO_BEST_WORST_STOCKS: "/portfolio/bestWorstStocks",
+  TRADE: "/trade",
+  NEWS: "/news",
+  TRANSACTION: "/transaction",
+  TRANSACTION_STATS: "/transaction/stats",
+  STOCK_RECOMMENDATION: "/stocks/recommendation",
+  USER: "/user",
+  USER_SETTINGS_INFO: "/user/settingsInfo",
+  USER_UPDATE: "/user/update",
+  VERIFY_EMAIL: "/verify-email",
+  LOGIN: "/login",
+  REGISTER: "/register",
+
+  ALPHA_VANTAGE_KEY: "/key/alpha-vantage",
+  RAPID_API_KEY: "/key/rapid-api"
+};
+
 export const DRAWER_WIDTH = 240;
 
 export const PAGE_SIZE = 10;

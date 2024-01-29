@@ -1,3 +1,5 @@
+import { BASE_API_URL, ENDPOINTS } from '../data/constants';
+
 export const HEADER_CELLS = [
   "#",
   "Action",
@@ -28,7 +30,7 @@ export const fetchTransactionsHelper = async (
   try {
     const token = localStorage.getItem("jwt");
     const response = await fetch(
-      `http://localhost:8080/api/transaction?size=${PAGE_SIZE}&page=${page}&startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}`,
+      `${BASE_API_URL}${ENDPOINTS.TRANSACTION}?size=${PAGE_SIZE}&page=${page}&startDate=${startDate}&endDate=${endDate}&searchTerm=${searchTerm}`,
       {
         method: "GET",
         headers: {
@@ -54,7 +56,7 @@ export const fetchStatsHelper = async () => {
   try {
     const token = localStorage.getItem("jwt");
     const response = await fetch(
-      "http://localhost:8080/api/transaction/stats",
+      `${BASE_API_URL}${ENDPOINTS.TRANSACTION_STATS}`,
       {
         method: "GET",
         headers: {
