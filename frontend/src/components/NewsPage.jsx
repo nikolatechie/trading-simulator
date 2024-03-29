@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from "react";
-import { ArticleCard } from "./article-card";
+import { ArticleCard } from "./ArticleCard";
 import { Alert, Box, CircularProgress } from "@mui/material";
 import { BASE_API_URL, ENDPOINTS, ActionTypes } from "../data/constants";
 

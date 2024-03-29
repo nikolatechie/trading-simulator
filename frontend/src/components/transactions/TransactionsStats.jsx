@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
-import { formatFloat } from "../../helpers/helpers.jsx";
+import { formatFloat } from "../../helpers/Helpers.jsx";
 
 export const TransactionsStats = (stats) => {
   return (

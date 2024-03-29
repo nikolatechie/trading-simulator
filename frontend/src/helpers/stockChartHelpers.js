@@ -1,5 +1,5 @@
-import { StockTimeRanges } from "../data/constants";
-import { formatDateShort, formatDateLong } from "./helpers.jsx";
+import { StockTimeRanges } from "../data/constants.js";
+import { formatDateShort, formatDateLong } from "./Helpers.jsx";
 
 // Called after fetching data from the API
 // Formats data and returns it to set state

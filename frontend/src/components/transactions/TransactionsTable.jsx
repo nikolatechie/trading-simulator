@@ -9,8 +9,8 @@ import {
   TableCell,
   Paper,
 } from "@mui/material";
-import { formatDateTime, formatFloat } from "../../helpers/helpers.jsx";
-import { HEADER_CELLS, PAGE_SIZE } from "../../helpers/transactions-helpers.js";
+import { formatDateTime, formatFloat } from "../../helpers/Helpers.jsx";
+import { HEADER_CELLS, PAGE_SIZE } from "../../helpers/transactionsHelpers.js";
 
 const useStyles = makeStyles((theme) => ({
   tableHeaderCell: {

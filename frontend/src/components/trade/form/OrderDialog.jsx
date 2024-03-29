@@ -9,8 +9,8 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import { StockOrderActions } from "../../../data/constants";
-import { formatFloat } from "../../../helpers/helpers.jsx";
+import { StockOrderActions } from "../../../data/constants.js";
+import { formatFloat } from "../../../helpers/Helpers.jsx";
 
 const useStyles = makeStyles(() => ({
   rowContainer: {

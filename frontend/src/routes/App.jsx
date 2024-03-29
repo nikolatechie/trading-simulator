@@ -8,9 +8,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import { useState, useCallback } from "react";
-import { AppBar } from "../components/app-bar.jsx";
-import { Drawer } from "../components/drawer/drawer.jsx";
-import { AppContent } from "../components/app-content.jsx";
+import { AppBar } from "../components/AppBar.jsx";
+import { Drawer } from "../components/drawer/Drawer.jsx";
+import { AppContent } from "../components/AppContent.jsx";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "../auth/auth.js";
 

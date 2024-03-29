@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Paper, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { formatFloat, getArrowDirection } from "../../helpers/helpers.jsx";
+import { formatFloat, getArrowDirection } from "../../helpers/Helpers.jsx";
 import { BASE_API_URL, ENDPOINTS } from '../../data/constants.js';
 
 export default function PortfolioRank() {

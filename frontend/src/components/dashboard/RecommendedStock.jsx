@@ -7,7 +7,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { formatFloat } from "../../helpers/helpers";
+import { formatFloat } from "../../helpers/Helpers";
 import { BASE_API_URL, ENDPOINTS } from '../../data/constants';
 
 export default function RecommendedStock() {

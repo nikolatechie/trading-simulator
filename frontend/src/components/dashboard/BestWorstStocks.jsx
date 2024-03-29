@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, Paper, Typography } from "@mui/material";
-import { formatFloat, getColorStringByValue } from "../../helpers/helpers";
+import { formatFloat, getColorStringByValue } from "../../helpers/Helpers";
 import { BASE_API_URL, ENDPOINTS } from '../../data/constants';
 
 export default function BestWorstStocks() {

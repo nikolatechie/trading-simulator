@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import { Alert, Box, Pagination } from "@mui/material";
-import { TransactionsStats } from "./transactions-stats";
-import { ExportTransactions } from "./export-transactions.jsx";
-import TransactionsFilter from "./transactions-filter.jsx";
+import { TransactionsStats } from "./TransactionsStats";
+import { ExportTransactions } from "./ExportTransactions.jsx";
+import TransactionsFilter from "./TransactionsFilter.jsx";
 import {
   fetchTransactionsHelper,
   initialStats,
   fetchStatsHelper,
-} from "../../helpers/transactions-helpers.js";
-import { TransactionsTable } from "./transactions-table.jsx";
+} from "../../helpers/transactionsHelpers.js";
+import { TransactionsTable } from "./TransactionsTable.jsx";
 import { FIRST_TRANSACTION_DATE } from "../../data/constants.js";
 
 const useStyles = makeStyles(() => ({

@@ -1,6 +1,6 @@
 import React from "react";
-import { formatStockChange } from "../../helpers/stock-details-helpers.jsx";
-import { getColorStringByValue } from "../../helpers/helpers.jsx";
+import { formatStockChange } from "../../helpers/StockDetailsHelpers.jsx";
+import { getColorStringByValue } from "../../helpers/Helpers.jsx";
 import { Box, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 

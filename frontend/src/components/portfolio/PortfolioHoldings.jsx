@@ -14,12 +14,12 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { fetchHoldings } from "../../helpers/portfolio-holdings-helpers.jsx";
+import { fetchHoldings } from "../../helpers/PortfolioHoldingsHelpers.jsx";
 import {
   formatFloat,
   getColorStringByValue,
   getArrowDirection,
-} from "../../helpers/helpers.jsx";
+} from "../../helpers/Helpers.jsx";
 
 const useStyles = makeStyles((theme) => ({
   tableHeaderCell: {

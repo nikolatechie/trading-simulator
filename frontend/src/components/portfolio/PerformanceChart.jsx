@@ -8,9 +8,9 @@ import {
   ResponsiveContainer,
   AreaChart,
 } from "recharts";
-import { PortfolioChartTooltip } from "./portfolio-chart-tooltip";
-import { formatDateShort, formatDateLong } from "../../helpers/helpers.jsx";
-import { BASE_API_URL, ENDPOINTS, STARTING_CASH_BALANCE } from "../../data/constants";
+import { PortfolioChartTooltip } from "./PortfolioChartTooltip.jsx";
+import { formatDateShort, formatDateLong } from "../../helpers/Helpers.jsx";
+import { BASE_API_URL, ENDPOINTS, STARTING_CASH_BALANCE } from "../../data/constants.js";
 
 const formatChartData = (chartData) => {
   const SUBTRACT_PERCENTAGE_OFFSET = 0.05;

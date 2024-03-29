@@ -20,7 +20,7 @@ import {
   reducer,
   initialState,
   columns,
-} from "../../helpers/stock-search-helpers";
+} from "../../helpers/stockSearchHelpers";
 
 const useStyles = makeStyles((theme) => ({
   search: {

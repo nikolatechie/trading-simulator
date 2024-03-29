@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useReducer } from "react";
 import { Alert, Typography, CircularProgress, Grid, Box } from "@mui/material";
-import { ActionTypes, BASE_API_URL, ENDPOINTS } from "../../data/constants";
-import { initialState, reducer } from "../../helpers/stock-details-helpers.jsx";
-import StockChart from "./stock-chart";
-import { StockPriceAndChange } from "./stock-price-change";
-import { QuoteInfoList } from "./quote-info-list";
+import { ActionTypes, BASE_API_URL, ENDPOINTS } from "../../data/constants.js";
+import { initialState, reducer } from "../../helpers/StockDetailsHelpers.jsx";
+import StockChart from "./StockChart.jsx";
+import { StockPriceAndChange } from "./StockPriceChange.jsx";
+import { QuoteInfoList } from "./QuoteInfoList";
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({

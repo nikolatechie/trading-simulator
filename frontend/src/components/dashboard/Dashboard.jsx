@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Grid } from "@mui/material";
-import PortfolioHoldings from "./portfolio-holdings";
-import PerformanceChart from "./performance-chart";
-import PortfolioOverview from "./portfolio-overview";
-import PortfolioRank from "./portfolio-rank";
+import PortfolioOverview from "../portfolio/PortfolioOverview";
+import PerformanceChart from "../portfolio/PerformanceChart";
+import BestWorstStocks from "./BestWorstStocks";
+import RecentTransactions from "./RecentTransactions";
+import RecommendedStock from "./RecommendedStock";
 import { BASE_API_URL, ENDPOINTS } from '../../data/constants';
 
-export default function PortfolioPage() {
+export default function Dashboard() {
   const [portfolioStats, setPortfolioStats] = useState({
     totalValue: 0.0,
     totalGainOrLoss: 0.0,
@@ -47,17 +48,24 @@ export default function PortfolioPage() {
       <Grid container spacing={2}>
         <Grid item xs={12} lg={5} container spacing={2}>
           <Grid item xs={6} sm={12} md={6} lg={12}>
-            <PortfolioOverview stats={portfolioStats}></PortfolioOverview>
+            <PortfolioOverview info='basic' stats={portfolioStats} />
           </Grid>
           <Grid item xs={6} sm={12} md={6} lg={12}>
-            <PortfolioRank></PortfolioRank>
+            <BestWorstStocks />
           </Grid>
         </Grid>
         <Grid item xs={12} lg={7}>
-          <PerformanceChart></PerformanceChart>
+          <PerformanceChart />
         </Grid>
       </Grid>
-      <PortfolioHoldings stats={portfolioStats} />
+      <Grid container spacing={2} mt={2}>
+        <Grid item xs={12} lg={6}>
+          <RecommendedStock />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <RecentTransactions />
+        </Grid>
+      </Grid>
     </Box>
   );
 }

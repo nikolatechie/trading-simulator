@@ -7,15 +7,15 @@ import {
   initialState,
   getDurationKey,
   placeTradeOrder,
-} from "../../../helpers/trade-form-helpers";
-import { CashBalance } from "./cash-balance";
-import { OrderAction } from "./order-action";
-import { OrderQuantity } from "./order-quantity";
-import { OrderType } from "./order-type";
-import { Price } from "./price";
-import { OrderDuration } from "./order-duration";
-import { FormActions } from "./form-actions";
-import { OrderDialog } from "./order-dialog";
+} from "../../../helpers/tradeFormHelpers";
+import { CashBalance } from "./CashBalance";
+import { OrderAction } from "./OrderAction";
+import { OrderQuantity } from "./OrderQuantity";
+import { OrderType } from "./OrderType";
+import { Price } from "./Price";
+import { OrderDuration } from "./OrderDuration";
+import { FormActions } from "./FormActions";
+import { OrderDialog } from "./OrderDialog";
 
 const useStyles = makeStyles(() => ({
   rowContainer: {

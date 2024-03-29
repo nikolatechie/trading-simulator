@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ButtonGroup, Button, Box, CircularProgress } from "@mui/material";
 import { StockTimeRanges } from "../../data/constants";
-import { StockChartTooltip } from "./stock-chart-tooltip";
+import { StockChartTooltip } from "./StockChartTooltip";
 import {
   formatFetchedHistoryData,
   extractDataForChart,
-} from "../../helpers/stock-chart-helpers";
+} from "../../helpers/stockChartHelpers";
 import {
   Area,
   XAxis,

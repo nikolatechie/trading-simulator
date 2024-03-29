@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Paper, Typography, Grid } from "@mui/material";
-import { formatFloat, getColorStringByValue } from "../../helpers/helpers.jsx";
+import { formatFloat, getColorStringByValue } from "../../helpers/Helpers.jsx";
 import { BASE_API_URL, ENDPOINTS } from '../../data/constants.js';
 
 export default function PortfolioOverview(props) {

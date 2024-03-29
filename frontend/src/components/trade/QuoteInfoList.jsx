@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import {
   shortenNumber,
   QuoteItem,
-} from "../../helpers/stock-details-helpers.jsx";
+} from "../../helpers/StockDetailsHelpers.jsx";
 
 export const QuoteInfoList = ({ state }) => {
   return (

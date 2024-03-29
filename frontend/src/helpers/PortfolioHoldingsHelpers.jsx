@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "@mui/material";
-import { formatFloat, getColorStringByValue } from "./helpers.jsx";
+import { formatFloat, getColorStringByValue } from "./Helpers.jsx";
 import { BASE_API_URL, ENDPOINTS } from '../data/constants.js';
 
 const getTotalGainOrLoss = (quantity, price, totalPurchasePrice) => {

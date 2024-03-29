@@ -11,7 +11,7 @@ import {
   fetchInfo,
   saveUpdates,
   deleteAccount,
-} from "../helpers/settings-helpers";
+} from "../helpers/settingsHelpers";
 
 export default function Settings() {
   const navigate = useNavigate();

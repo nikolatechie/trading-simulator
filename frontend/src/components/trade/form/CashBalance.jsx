@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { formatFloat } from "../../../helpers/helpers.jsx";
+import { formatFloat } from "../../../helpers/Helpers.jsx";
 
 export const CashBalance = React.memo(({ cash }) => (
   <Box display='flex'>

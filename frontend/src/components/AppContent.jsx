@@ -1,11 +1,11 @@
 import React from "react";
-import NewsPage from "./news-page";
-import TradePage from "./trade/trade-page";
-import TransactionsPage from "./transactions/transactions-page";
-import PortfolioPage from "./portfolio/portfolio-page";
-import Dashboard from "./dashboard/dashboard";
-import Settings from "./settings";
-import ErrorPage from "../routes/error-page";
+import NewsPage from "./NewsPage";
+import TradePage from "./trade/TradePage";
+import TransactionsPage from "./transactions/TransactionsPage";
+import PortfolioPage from "./portfolio/PortfolioPage";
+import Dashboard from "./dashboard/Dashboard";
+import Settings from "./Settings";
+import ErrorPage from "../routes/ErrorPage";
 
 export const AppContent = (props) => {
   switch (props.selectedPage) {

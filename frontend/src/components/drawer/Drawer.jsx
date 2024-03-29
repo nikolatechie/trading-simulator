@@ -9,8 +9,8 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import {
   drawerMainListItems,
   drawerSecondaryListItems,
-} from "../../data/drawer-list-items.js";
-import { DrawerListItem } from "./drawer-list-item.jsx";
+} from "../../data/drawerListItems.js";
+import { DrawerListItem } from "./DrawerListItem.jsx";
 import { Toolbar } from "@mui/material";
 
 const DrawerStyled = styled(MuiDrawer, {

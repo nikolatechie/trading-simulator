@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Alert, Box } from "@mui/material";
-import StockSearch from "./stock-search";
-import StockDetails from "./stock-details";
-import { TradeForm } from "./form/trade-form";
+import StockSearch from "./StockSearch";
+import StockDetails from "./StockDetails";
+import { TradeForm } from "./form/TradeForm";
 
 const getMarketDateTime = () => {
   const currentDate = new Date();
