@@ -13,6 +13,7 @@ import com.nikolagrujic.tradingsimulator.response.BestWorstStocksResponse;
 import com.nikolagrujic.tradingsimulator.response.PortfolioOverview;
 import com.nikolagrujic.tradingsimulator.response.PortfolioStatsResponse;
 import com.nikolagrujic.tradingsimulator.response.TodayChange;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class PortfolioService {
     private final PortfolioHistoryRepository historyRepository;
     private final StockHoldingRepository stockHoldingRepository;
     private final StockService stockService;
+    @Setter
     private UserService userService;
     private final ObjectMapper objectMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(PortfolioService.class);
@@ -53,14 +55,6 @@ public class PortfolioService {
         this.stockService = stockService;
         this.historyRepository = historyRepository;
         this.objectMapper = objectMapper;
-    }
-
-    /**
-     * Used to get rid of circular dependency.
-     * @param userService UserService object that's being set from UserService
-     */
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 
     // Returns cash balance, today's change, and annual return

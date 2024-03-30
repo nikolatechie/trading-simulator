@@ -48,7 +48,7 @@ public class EmailVerificationService {
     public EmailVerificationToken getByToken(String token) throws InvalidTokenException {
         EmailVerificationToken savedToken = emailVerificationTokenRepository.findByToken(token);
         if (savedToken == null) {
-            throw new InvalidTokenException("The token is invalid!");
+            throw new InvalidTokenException("The token is invalid!", token);
         }
         return savedToken;
     }

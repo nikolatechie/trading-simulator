@@ -55,7 +55,7 @@ public class NewsService {
                     restTemplate.exchange(requestEntity, NewsListResponse.class);
 
             if (responseEntity.hasBody() &&
-                    Objects.requireNonNull(responseEntity.getBody()).getArticles().size() > 0) {
+                    !Objects.requireNonNull(responseEntity.getBody()).getArticles().isEmpty()) {
                 List<NewsArticle> newsArticles = responseEntity.getBody().getArticles();
                 LOGGER.info("Successfully retrieved a list of {} news articles.", newsArticles.size());
                 saveNewsArticles(responseEntity.getBody().getArticles());

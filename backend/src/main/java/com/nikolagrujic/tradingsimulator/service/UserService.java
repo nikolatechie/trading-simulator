@@ -56,7 +56,10 @@ public class UserService implements UserDetailsService {
     @Transactional
     public void registerNewUser(User user) throws UserAlreadyExistsException {
         if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists!");
+            throw new UserAlreadyExistsException(
+                "User with email " + user.getEmail() + " already exists!",
+                user.getEmail()
+            );
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEmailVerified(false);
@@ -102,7 +105,7 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
             return new JwtResponse(jwtUtil.generateJwt(email));
         }
-        else throw new UserNotRegisteredException("Couldn't retrieve the user.");
+        else throw new UserNotRegisteredException("Couldn't retrieve the user.", null);
     }
 
     @Transactional

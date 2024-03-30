@@ -103,7 +103,7 @@ public class TradeService {
     }
 
     @Transactional
-    ObjectNode startOrderTransaction(String email, TradeOrder tradeOrder) throws Exception {
+    public ObjectNode startOrderTransaction(String email, TradeOrder tradeOrder) throws Exception {
         checkOrder(tradeOrder);
         // Order is valid - proceed
         configureExecutionStrategy(tradeOrder);

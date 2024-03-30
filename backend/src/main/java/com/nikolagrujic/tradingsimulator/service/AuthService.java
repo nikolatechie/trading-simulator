@@ -47,12 +47,6 @@ public class AuthService {
             checkUserForLogin(user, loginRequest);
             handleAuthentication(loginRequest);
             return ResponseEntity.ok(new JwtResponse(jwtUtil.generateJwt(loginRequest.getEmail())));
-        } catch (UserNotRegisteredException e) {
-            LOGGER.error("User is not registered: {}", loginRequest.getEmail());
-            return ResponseEntity.status(401).body(new ErrorResponse("You must register before logging in."));
-        } catch (AuthenticationException e) {
-            LOGGER.error("Incorrect password for user: {}", loginRequest.getEmail());
-            return ResponseEntity.status(401).body(new ErrorResponse("The password is incorrect."));
         } catch (UserNotVerifiedException e) {
             handleUserNotVerified(user);
             return ResponseEntity.status(401).body(new ErrorResponse("Email hasn't been verified!"));
@@ -62,7 +56,10 @@ public class AuthService {
     private void checkUserForLogin(User user, LoginRequest loginRequest)
             throws UserNotRegisteredException, UserNotVerifiedException {
         if (user == null) {
-            throw new UserNotRegisteredException("User with email " + loginRequest.getEmail() + " is not registered!");
+            throw new UserNotRegisteredException(
+                "User with email " + loginRequest.getEmail() + " is not registered!",
+                loginRequest.getEmail()
+            );
         } else if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()) && !user.isEmailVerified()) {
             throw new UserNotVerifiedException("User with email " + loginRequest.getEmail() + " is not verified!");
         }
