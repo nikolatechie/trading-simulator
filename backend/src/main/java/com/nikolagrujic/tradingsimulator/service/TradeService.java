@@ -51,19 +51,14 @@ public class TradeService {
         return authentication.getName();
     }
 
+    @Transactional
     public ObjectNode placeOrder(TradeOrder tradeOrder) throws Exception {
         checkMarketIsOpen();
         String email = getUserEmail();
         LOGGER.info("[{}] Placing a trade order: {}", email, tradeOrder.toString());
         boolean locked = setPortfolioLock(email, true); // Lock portfolio
         if (!locked) throw new Exception("Another order is currently in progress...");
-        ObjectNode result;
-        try {
-            result = startOrderTransaction(email, tradeOrder);
-        } catch (Exception e) {
-            setPortfolioLock(email, false); // Unlock portfolio
-            throw e;
-        }
+        ObjectNode result = startOrderTransaction(email, tradeOrder);
         setPortfolioLock(email, false); // Unlock portfolio
         return result;
     }
@@ -102,8 +97,7 @@ public class TradeService {
         // At this point, the market is open
     }
 
-    @Transactional
-    public ObjectNode startOrderTransaction(String email, TradeOrder tradeOrder) throws Exception {
+    private ObjectNode startOrderTransaction(String email, TradeOrder tradeOrder) throws Exception {
         checkOrder(tradeOrder);
         // Order is valid - proceed
         configureExecutionStrategy(tradeOrder);

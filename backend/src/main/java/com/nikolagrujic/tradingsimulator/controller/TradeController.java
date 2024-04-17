@@ -33,8 +33,7 @@ public class TradeController {
             return ResponseEntity.status(400).body(
                 new ErrorResponse(e.getMessage())
             );
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.error("Couldn't place an order: {}", e.getMessage());
             return ResponseEntity.status(500).body(
                 new ErrorResponse(e.getMessage())

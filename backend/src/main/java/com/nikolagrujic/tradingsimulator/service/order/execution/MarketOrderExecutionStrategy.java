@@ -89,7 +89,7 @@ public class MarketOrderExecutionStrategy implements OrderExecutionStrategy {
     }
 
     private void addToStockHoldings(BigDecimal totalPrice, Portfolio portfolio, TradeOrder tradeOrder) {
-        // Update stock holding it already exists
+        // Update stock holding if it already exists
         for (StockHolding stockHolding: portfolio.getStockHoldings()) {
             if (stockHolding.getSymbol().equals(tradeOrder.getSymbol())) {
                 stockHolding.setQuantity(stockHolding.getQuantity() + tradeOrder.getQuantity());

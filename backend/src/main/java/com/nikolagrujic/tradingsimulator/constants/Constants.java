@@ -13,7 +13,6 @@ public class Constants {
 
     // Timers
     public static final long REQUEST_DELAY_MILLISECONDS = 2000;
-    public static final long REQUEST_LONG_DELAY_MILLISECONDS = 30000;
 
     // Stocks
     public enum StockExchange {

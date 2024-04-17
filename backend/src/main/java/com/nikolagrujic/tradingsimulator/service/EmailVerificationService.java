@@ -58,7 +58,7 @@ public class EmailVerificationService {
         emailVerificationTokenRepository.save(token);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(user.getEmail());
-        mailMessage.setSubject("Verify Email to access Trading Simulator");
+        mailMessage.setSubject("Verify email to access Trading Simulator");
         mailMessage.setText(createEmailText(user, token.getToken()));
         eventPublisher.publishEvent(mailMessage);
     }
