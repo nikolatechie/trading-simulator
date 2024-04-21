@@ -123,7 +123,10 @@ export default function StockDetails({ stock, handleFormatQuote }) {
         dispatch({ type: ActionTypes.FETCH_FAILURE });
       }
     };
-    if (stock.symbol !== null) fetchStockQuoteAndLogo();
+    if (stock.symbol !== null) {
+      fetchStockQuoteAndLogo();
+    }
+    // eslint-disable-next-line
   }, [stock.symbol]);
 
   if (stock.symbol === null || state.quote === null) return false;

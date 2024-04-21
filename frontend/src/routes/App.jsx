@@ -28,7 +28,7 @@ export default function App() {
   const handleSelectPage = useCallback((page) => {
     if (page === "Sign out") signOut(navigate);
     else setSelectedPage(page);
-  }, []);
+  }, [navigate]);
 
   return (
     <ThemeProvider theme={mdTheme}>

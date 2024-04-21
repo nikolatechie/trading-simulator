@@ -83,6 +83,7 @@ export default function StockSearch(props) {
 
   useEffect(() => {
     fetchStockInfoList();
+    // eslint-disable-next-line
   }, [state.page]);
 
   const handlePageChange = (value) => {

@@ -33,7 +33,7 @@ export default function EmailVerificationPage() {
       }
     };
     verifyUser();
-  }, []);
+  }, [searchParams]);
 
   return (
     <Box>

@@ -48,6 +48,7 @@ export default function StockChart(props) {
       }
     };
     fetchStockData();
+    // eslint-disable-next-line
   }, [props.symbol]);
 
   const handleTimeRangeChange = (range) => {

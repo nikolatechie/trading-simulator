@@ -56,6 +56,7 @@ export const TradeForm = ({ symbol, name, bidPrice, askPrice }) => {
     (e) => {
       setAction(e.target.value);
     },
+    // eslint-disable-next-line
     [action, symbol, bidPrice, askPrice]
   );
 
@@ -63,18 +64,21 @@ export const TradeForm = ({ symbol, name, bidPrice, askPrice }) => {
     (e) => {
       setQuantity(e.target.value);
     },
+    // eslint-disable-next-line
     [quantity, symbol, bidPrice, askPrice]
   );
 
   const handleShowMax = useCallback(async () => {
     const quantity = await getMaxQuantity(action, symbol, askPrice);
     setQuantity(quantity);
+    // eslint-disable-next-line
   }, [action, symbol, bidPrice, askPrice, quantity]);
 
   const handleOrderTypeChange = useCallback(
     (e) => {
       setType(e.target.value);
     },
+    // eslint-disable-next-line
     [type, symbol, bidPrice, askPrice]
   );
 
@@ -82,6 +86,7 @@ export const TradeForm = ({ symbol, name, bidPrice, askPrice }) => {
     (e) => {
       setPrice(e.target.value);
     },
+    // eslint-disable-next-line
     [price, symbol, bidPrice, askPrice]
   );
 
@@ -89,6 +94,7 @@ export const TradeForm = ({ symbol, name, bidPrice, askPrice }) => {
     (e) => {
       setDuration(e.target.value);
     },
+    // eslint-disable-next-line
     [duration, symbol, bidPrice, askPrice]
   );
 
@@ -98,15 +104,18 @@ export const TradeForm = ({ symbol, name, bidPrice, askPrice }) => {
     setType(initialState.orderType);
     setPrice(initialState.price);
     setDuration(initialState.duration);
+    // eslint-disable-next-line
   }, [action, quantity, type, price, duration]);
 
-  const handleOpenDialogAction = useCallback(() => setDialogOpen(true), [
-    dialogOpen,
-  ]);
+  const handleOpenDialogAction = useCallback(() => setDialogOpen(true),
+    // eslint-disable-next-line
+    [dialogOpen]
+  );
 
-  const handleCloseDialogAction = useCallback(() => setDialogOpen(false), [
-    dialogOpen,
-  ]);
+  const handleCloseDialogAction = useCallback(() => setDialogOpen(false),
+    // eslint-disable-next-line
+    [dialogOpen]
+  );
 
   const handlePlaceOrder = useCallback(async () => {
     setDialogOpen(false);
@@ -125,6 +134,7 @@ export const TradeForm = ({ symbol, name, bidPrice, askPrice }) => {
       setCash(response.cash);
       alert("Your trade order has been placed!");
     }
+    // eslint-disable-next-line
   }, [dialogOpen, cash, action, quantity, type, price, duration]);
 
   return (

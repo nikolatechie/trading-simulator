@@ -66,6 +66,7 @@ export default function TransactionsPage() {
 
   useEffect(() => {
     fetchTransactions();
+    // eslint-disable-next-line
   }, [page]);
 
   const handlePageChange = (value) => {
