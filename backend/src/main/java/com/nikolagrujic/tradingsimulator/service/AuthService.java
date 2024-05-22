@@ -2,6 +2,7 @@ package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.exception.UserNotRegisteredException;
 import com.nikolagrujic.tradingsimulator.exception.UserNotVerifiedException;
+import com.nikolagrujic.tradingsimulator.model.JwtCheck;
 import com.nikolagrujic.tradingsimulator.response.JwtResponse;
 import com.nikolagrujic.tradingsimulator.model.LoginRequest;
 import com.nikolagrujic.tradingsimulator.model.User;
@@ -80,5 +81,15 @@ public class AuthService {
         LOGGER.error("Email hasn't been verified: {}", user.getEmail());
         emailVerificationService.deleteByUserId(user.getId()); // Remove old token
         emailVerificationService.createAndSendVerificationToken(user); // Send new token
+    }
+
+    public ResponseEntity<?> checkJwtForExpiry(JwtCheck jwtCheck) {
+        String jwt = jwtCheck.getJwt();
+        if (jwt == null || jwtUtil.isJwtExpired(jwt)) {
+            return ResponseEntity.status(401).body(
+                new ErrorResponse("Invalid JWT")
+            );
+        }
+        return ResponseEntity.ok().build();
     }
 }

@@ -25,7 +25,7 @@ public class JwtUtil {
         return extractAllClaims(jwt).getSubject();
     }
 
-    private boolean isJwtExpired(String jwt) {
+    public boolean isJwtExpired(String jwt) {
         return extractAllClaims(jwt).getExpiration().before(new Date());
     }
 

@@ -20,6 +20,7 @@ export const ENDPOINTS = {
   USER_SETTINGS_INFO: "/user/settingsInfo",
   USER_UPDATE: "/user/update",
   VERIFY_EMAIL: "/verify-email",
+  CHECK_JWT_EXPIRY: "/check-jwt-expiry",
   LOGIN: "/login",
   REGISTER: "/register",
 

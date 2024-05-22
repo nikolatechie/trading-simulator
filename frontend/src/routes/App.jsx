@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   createTheme,
   StyledEngineProvider,
@@ -12,7 +12,8 @@ import { AppBar } from "../components/AppBar.jsx";
 import { Drawer } from "../components/drawer/Drawer.jsx";
 import { AppContent } from "../components/AppContent.jsx";
 import { useNavigate } from "react-router-dom";
-import { signOut } from "../auth/auth.js";
+import { refreshJwt, signOut } from "../auth/auth.js";
+import { BASE_API_URL, ENDPOINTS } from '../data/constants.js';
 
 const mdTheme = createTheme();
 
@@ -21,13 +22,45 @@ export default function App() {
   const [selectedPage, setSelectedPage] = useState("Dashboard");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const checkJwtForExpiry = async () => {
+      // Check if user's JWT has expired
+      try {
+        const token = localStorage.getItem("jwt");
+        const response = await fetch(`${BASE_API_URL}${ENDPOINTS.CHECK_JWT_EXPIRY}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              jwt: token
+            })
+          }
+        );
+        if (!response.ok) {
+          throw new Error("JWT has expired!");
+        }
+      } catch (error) {
+        console.log(error);
+        refreshJwt(navigate);
+      }
+    };
+    checkJwtForExpiry();
+    // eslint-disable-next-line
+  }, []);
+
   const toggleDrawer = useCallback(() => {
     setOpen(!open);
   }, [open]);
 
   const handleSelectPage = useCallback((page) => {
-    if (page === "Sign out") signOut(navigate);
-    else setSelectedPage(page);
+    if (page === "Sign out") {
+      signOut(navigate);
+    } else {
+      setSelectedPage(page);
+    }
   }, [navigate]);
 
   return (

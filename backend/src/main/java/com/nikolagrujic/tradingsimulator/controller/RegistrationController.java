@@ -29,7 +29,7 @@ public class RegistrationController {
 
     @GetMapping(Constants.VERIFY_EMAIL_PATH)
     public ResponseEntity<?> verifyUserEmail(@RequestParam String token) {
-        LOGGER.info("Verifying user with token: " + token);
+        LOGGER.info("Verifying user with token: {}", token);
         userService.verifyUser(token);
         return ResponseEntity.ok().build();
     }

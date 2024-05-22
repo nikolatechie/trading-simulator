@@ -85,7 +85,7 @@ public class EmailVerificationService {
      */
     @EventListener
     public void sendEmailForVerification(SimpleMailMessage mailMessage) {
-        LOGGER.info("Sending a verification email to " + Objects.requireNonNull(mailMessage.getTo())[0]);
+        LOGGER.info("Sending a verification email to {}", Objects.requireNonNull(mailMessage.getTo())[0]);
         mailSender.send(mailMessage);
     }
 
