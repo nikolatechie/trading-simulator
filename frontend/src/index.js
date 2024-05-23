@@ -12,6 +12,7 @@ import LoginPage from "./routes/Login";
 import LandingPage from "./routes/LandingPage";
 import App from "./routes/App";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
+import ResetPasswordPage from './routes/ResetPasswordPage';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage />,
   },
   {
     path: "/app",

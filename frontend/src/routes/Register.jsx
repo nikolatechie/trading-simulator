@@ -13,7 +13,7 @@ import { CircularProgress } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { BASE_API_URL, ENDPOINTS } from '../data/constants';
+import { BASE_API_URL, ENDPOINTS, PASSWORD_MIN_LENGTH } from '../data/constants';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -21,8 +21,15 @@ export default function RegisterPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setLoading(true);
     const data = new FormData(event.currentTarget);
+    const password = data.get("password");
+
+    if (password.length < PASSWORD_MIN_LENGTH) {
+      alert(`Password must consist of at least ${PASSWORD_MIN_LENGTH} characters.`);
+      return;
+    }
+
+    setLoading(true);
     fetch(`${BASE_API_URL}${ENDPOINTS.REGISTER}`, {
       method: "POST",
       headers: {
@@ -32,7 +39,7 @@ export default function RegisterPage() {
         firstName: data.get("firstName"),
         lastName: data.get("lastName"),
         email: data.get("email"),
-        password: data.get("password"),
+        password: password,
       }),
     })
       .then((res) => {
@@ -134,7 +141,6 @@ export default function RegisterPage() {
                   label='Password'
                   type='password'
                   id='password'
-                  autoComplete='new-password'
                 />
               </Grid>
             </Grid>

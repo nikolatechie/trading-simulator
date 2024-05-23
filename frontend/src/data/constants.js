@@ -22,11 +22,15 @@ export const ENDPOINTS = {
   VERIFY_EMAIL: "/verify-email",
   CHECK_JWT_EXPIRY: "/check-jwt-expiry",
   LOGIN: "/login",
+  RESET_PASSWORD: "/user/reset-password",
+  UPDATE_PASSWORD: "/user/update-password",
   REGISTER: "/register",
 
   ALPHA_VANTAGE_KEY: "/key/alpha-vantage",
   RAPID_API_KEY: "/key/rapid-api"
 };
+
+export const PASSWORD_MIN_LENGTH = 8;
 
 export const DRAWER_WIDTH = 240;
 

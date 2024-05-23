@@ -1,5 +1,6 @@
 package com.nikolagrujic.tradingsimulator.model;
 
+import com.nikolagrujic.tradingsimulator.constants.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +37,7 @@ public class User {
 
     @NotNull
     @NotEmpty(message = "The password must not be empty!")
-    @Size(min = 8, message = "The password length must consist of at least 8 characters.")
+    @Size(min = Constants.PASSWORD_MIN_LENGTH, message = "The password length must consist of at least 8 characters.")
     private String password;
 
     @Column(columnDefinition = "boolean default false")

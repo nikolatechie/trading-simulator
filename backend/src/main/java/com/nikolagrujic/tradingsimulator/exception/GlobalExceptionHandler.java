@@ -41,6 +41,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(IncompleteBodyException.class)
+    public ResponseEntity<?> handleIncompleteBodyException(IncompleteBodyException e) {
+        LOGGER.error(e.getMessage());
+        return ResponseEntity.status(400).body(new ErrorResponse(e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
         // Default exception

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface EmailVerificationTokenRepository extends JpaRepository<EmailVerificationToken,Long> {
+public interface EmailVerificationTokenRepository extends JpaRepository<EmailVerificationToken, Long> {
     EmailVerificationToken findByToken(String token);
     List<EmailVerificationToken> findAllByExpiryDateTimeBefore(LocalDateTime dateTime);
     void deleteByUser_Id(Long user_id);

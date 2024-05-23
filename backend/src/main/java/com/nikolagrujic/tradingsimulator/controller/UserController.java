@@ -1,5 +1,7 @@
 package com.nikolagrujic.tradingsimulator.controller;
 
+import com.nikolagrujic.tradingsimulator.model.LoginRequest;
+import com.nikolagrujic.tradingsimulator.model.ResetPasswordRequest;
 import com.nikolagrujic.tradingsimulator.model.UserDto;
 import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
 import com.nikolagrujic.tradingsimulator.service.UserService;
@@ -8,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/user")
@@ -33,7 +37,7 @@ public class UserController {
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDto userDto) {
         try {
             return ResponseEntity.ok(userService.updateUser(userDto));
         } catch (Exception e) {
@@ -42,6 +46,17 @@ public class UserController {
                 new ErrorResponse(e.getMessage())
             );
         }
+    }
+
+    @PatchMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody LoginRequest loginRequest) {
+        return userService.sendResetPasswordLink(loginRequest);
+    }
+
+    @PatchMapping("/update-password")
+    public ResponseEntity<?> updatePasswordAfterResetRequest(@Valid @RequestBody ResetPasswordRequest request) {
+        userService.updatePassword(request);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping

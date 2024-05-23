@@ -27,7 +27,7 @@ export const TransactionsStats = (stats) => {
       <Box textAlign='right'>
         <Typography variant='body2'>MOST TRADED STOCK</Typography>
         <Typography variant='h6' fontWeight='bold'>
-          {stats.mostTradedStock}
+          {stats.mostTradedStock || "N/A"}
         </Typography>
       </Box>
     </Box>

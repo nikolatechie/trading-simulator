@@ -2,16 +2,22 @@ package com.nikolagrujic.tradingsimulator.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.exception.*;
-import com.nikolagrujic.tradingsimulator.model.EmailVerificationToken;
-import com.nikolagrujic.tradingsimulator.model.UserDto;
+import com.nikolagrujic.tradingsimulator.model.*;
+import com.nikolagrujic.tradingsimulator.repository.ResetPasswordTokenRepository;
 import com.nikolagrujic.tradingsimulator.repository.UserRepository;
-import com.nikolagrujic.tradingsimulator.model.User;
+import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
 import com.nikolagrujic.tradingsimulator.response.JwtResponse;
 import com.nikolagrujic.tradingsimulator.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,35 +28,49 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final ResetPasswordTokenRepository tokenRepository;
     private final PortfolioService portfolioService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailVerificationService emailVerificationService;
+    private final JavaMailSender mailSender;
+    private final ApplicationEventPublisher eventPublisher;
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+    private final ResetPasswordTokenRepository resetPasswordTokenRepository;
 
     @Autowired
     public UserService(
             UserRepository userRepository,
+            ResetPasswordTokenRepository tokenRepository,
             BCryptPasswordEncoder passwordEncoder,
             EmailVerificationService emailVerificationService,
             PortfolioService portfolioService,
+            JavaMailSender mailSender,
+            ApplicationEventPublisher eventPublisher,
             ObjectMapper objectMapper,
-            JwtUtil jwtUtil
-        ) {
+            JwtUtil jwtUtil,
+            ResetPasswordTokenRepository resetPasswordTokenRepository) {
         this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailVerificationService = emailVerificationService;
         this.portfolioService = portfolioService;
         this.portfolioService.setUserService(this); // Getting rid of circular dependency
+        this.mailSender = mailSender;
+        this.eventPublisher = eventPublisher;
         this.objectMapper = objectMapper;
         this.jwtUtil = jwtUtil;
+        this.resetPasswordTokenRepository = resetPasswordTokenRepository;
     }
 
     @Transactional
@@ -100,12 +120,90 @@ public class UserService implements UserDetailsService {
                 if (!userDto.getNewPassword().equals(userDto.getNewPasswordRepeat())) {
                     throw new InvalidPasswordException("The new passwords don't match.");
                 }
+                if (userDto.getNewPassword().length() < Constants.PASSWORD_MIN_LENGTH) {
+                    throw new InvalidPasswordException("The password must contain at least 8 characters.");
+                }
                 user.setPassword(passwordEncoder.encode(userDto.getNewPassword()));
             }
             userRepository.save(user);
             return new JwtResponse(jwtUtil.generateJwt(email));
         }
         else throw new UserNotRegisteredException("Couldn't retrieve the user.", null);
+    }
+
+    public void updatePassword(ResetPasswordRequest request) {
+        if (request == null) {
+            throw new IncompleteBodyException("Couldn't update the password due to missing fields in the request.");
+        }
+        if (!request.getNewPassword().equals(request.getNewPasswordRepeat())) {
+            throw new InvalidPasswordException("The new passwords don't match.");
+        }
+        ResetPasswordToken resetToken = resetPasswordTokenRepository.findByToken(request.getToken());
+        if (resetToken == null) {
+            throw new InvalidTokenException("The reset token doesn't exist.", request.getToken());
+        }
+        if (resetToken.getExpiryDateTime().isBefore(LocalDateTime.now())) {
+            throw new ExpiredTokenException("The token has expired. Please request a new password reset link.");
+        }
+        // Update password
+        User user = resetToken.getUser();
+        LOGGER.info("Updating password via reset link: {}", user.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        // Remove token
+        resetPasswordTokenRepository.deleteById(resetToken.getId());
+    }
+
+    public ResponseEntity<?> sendResetPasswordLink(LoginRequest loginRequest) {
+        User user = null;
+        if (loginRequest != null) {
+            user = userRepository.findByEmail(loginRequest.getEmail());
+        }
+        if (user == null) {
+            return ResponseEntity.status(400).body(
+                new ErrorResponse("User with entered email doesn't exist!")
+            );
+        }
+        LOGGER.info("Creating a reset password token for {}", loginRequest.getEmail());
+        ResetPasswordToken token = createToken(user);
+        tokenRepository.save(token);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setSubject("Reset your password | Trading Simulator");
+        mailMessage.setText(createEmailText(user, token.getToken()));
+        eventPublisher.publishEvent(new ResetPasswordEvent(mailMessage));
+        return ResponseEntity.ok().build();
+    }
+
+    private ResetPasswordToken createToken(User user) {
+        ResetPasswordToken token = new ResetPasswordToken();
+        token.setUser(user);
+        token.setToken(UUID.randomUUID().toString());
+        token.setExpiryDateTime(LocalDateTime.now().plusMinutes(Constants.EMAIL_TOKEN_EXPIRATION_MINUTES));
+        return token;
+    }
+
+    private String createEmailText(User user, String token) {
+        return "Dear " + user.getFirstName() + ",\n" +
+                "We have received a request to reset your password. " +
+                "Please click the following link to do so: " +
+                "http://localhost:3000" + Constants.RESET_PASSWORD_PATH +
+                "?token=" + token + " (it expires in " + Constants.EMAIL_TOKEN_EXPIRATION_MINUTES +
+                " minutes).\n\nKind regards,\nTrading Simulator";
+    }
+
+    /**
+     * Event listener that sends a reset password token by email. Should NOT be called manually!
+     * @param event object containing data about sender, receiver, subject etc.
+     */
+    @Async
+    @EventListener
+    public void sendResetPasswordTokenOnEmail(ResetPasswordEvent event) {
+        LOGGER.info(
+            "Sending a reset password token on email {}",
+            Objects.requireNonNull(event.getSimpleMailMessage().getTo())[0]
+        );
+        mailSender.send(event.getSimpleMailMessage());
     }
 
     @Transactional
@@ -149,10 +247,17 @@ public class UserService implements UserDetailsService {
     @Scheduled(cron = "0 0 0 */10 * *")
     public void cleanupUsersAndTokens() {
         LOGGER.info("Removing unused tokens and unverified users");
-        List<EmailVerificationToken> expiredTokens = emailVerificationService.getAllTokensToBeRemoved();
 
-        for (EmailVerificationToken token : expiredTokens) {
+        List<EmailVerificationToken> verificationTokens = emailVerificationService.getAllTokensToBeRemoved();
+        for (EmailVerificationToken token : verificationTokens) {
             userRepository.deleteById(token.getUser().getId()); // Token gets removed automatically
+        }
+
+        List<ResetPasswordToken> resetTokens = resetPasswordTokenRepository.findAll();
+        for (ResetPasswordToken token : resetTokens) {
+            if (token.getExpiryDateTime().isBefore(LocalDateTime.now())) {
+                resetPasswordTokenRepository.delete(token);
+            }
         }
     }
 }
