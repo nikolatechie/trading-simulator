@@ -1,5 +1,5 @@
 import React from "react";
-import NewsPage from "./NewsPage";
+import NewsPage from "./news/NewsPage";
 import TradePage from "./trade/TradePage";
 import TransactionsPage from "./transactions/TransactionsPage";
 import PortfolioPage from "./portfolio/PortfolioPage";
