@@ -8,7 +8,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -53,4 +55,11 @@ public class User {
     private List<Transaction> transactions;
 
     private LocalDate verificationDate;
+
+    @ManyToMany(mappedBy = "likedBy")
+    private Set<NewsArticle> likedNewsArticles = new HashSet<>();
+
+    public boolean hasLikedArticle(NewsArticle article) {
+        return likedNewsArticles.contains(article);
+    }
 }

@@ -1,5 +1,6 @@
 package com.nikolagrujic.tradingsimulator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,4 +45,18 @@ public class NewsArticle {
 
     @NotNull
     private LocalDateTime publishedAt;
+
+    @JsonIgnore
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "news_article_likes",
+            joinColumns = { @JoinColumn(name = "news_article_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    private Set<User> likedBy = new HashSet<>();
+
+    @Transient
+    public int getNumberOfLikes() {
+        return likedBy.size();
+    }
 }

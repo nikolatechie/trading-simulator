@@ -1,7 +1,10 @@
 package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.constants.Constants;
+import com.nikolagrujic.tradingsimulator.mapper.NewsArticleMapper;
 import com.nikolagrujic.tradingsimulator.model.NewsArticle;
+import com.nikolagrujic.tradingsimulator.model.User;
+import com.nikolagrujic.tradingsimulator.response.NewsArticleDto;
 import com.nikolagrujic.tradingsimulator.response.NewsListResponse;
 import com.nikolagrujic.tradingsimulator.repository.NewsRepository;
 import org.slf4j.Logger;
@@ -9,10 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -20,12 +25,14 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class NewsService {
     private final NewsRepository newsRepository;
+    private final UserService userService;
     @Value("${news.api.key}")
     private String apiKey;
     private static final String NEWS_ENDPOINT = "https://newsapi.org/v2/everything?q=stock";
@@ -36,8 +43,9 @@ public class NewsService {
     private static final long DELETE_OLD_NEWS_INITIAL_DELAY_MILLISECONDS = 10000;
 
     @Autowired
-    public NewsService(NewsRepository newsRepository) {
+    public NewsService(NewsRepository newsRepository, UserService userService) {
         this.newsRepository = newsRepository;
+        this.userService = userService;
     }
 
     @Async
@@ -86,6 +94,23 @@ public class NewsService {
         return date.minusDays(5).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
+    public void flipLike(Long articleId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(email);
+        NewsArticle article = newsRepository.getById(articleId);
+        boolean liked = user.hasLikedArticle(article);
+
+        if (liked) {
+            LOGGER.info("[{}] Unliking article with id {}.", user.getId(), articleId);
+            article.getLikedBy().remove(user);
+        } else {
+            LOGGER.info("[{}] Liking article with id {}.", user.getId(), articleId);
+            article.getLikedBy().add(user);
+        }
+
+        newsRepository.save(article);
+    }
+
     @Async
     @Scheduled(initialDelay = DELETE_OLD_NEWS_INITIAL_DELAY_MILLISECONDS,
             fixedDelay = DELETE_OLD_NEWS_PERIOD_MILLISECONDS)
@@ -98,7 +123,16 @@ public class NewsService {
         }
     }
 
-    public Page<NewsArticle> getNewsArticles(Pageable pageable) {
-        return newsRepository.findAll(pageable);
+    public Page<NewsArticleDto> getNewsArticles(Pageable pageable) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(email);
+        Page<NewsArticle> articles = newsRepository.findAll(pageable);
+        List<NewsArticleDto> articlesDto = new ArrayList<>();
+
+        for (NewsArticle article: articles.getContent()) {
+            articlesDto.add(NewsArticleMapper.convertToDto(article, user));
+        }
+
+        return new PageImpl<>(articlesDto, articles.getPageable(), articles.getTotalElements());
     }
 }

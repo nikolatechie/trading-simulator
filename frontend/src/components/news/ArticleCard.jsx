@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { formatDateTime } from "../../helpers/Helpers.jsx";
 import ForumIcon from "@mui/icons-material/Forum";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { BASE_API_URL, ENDPOINTS } from '../../data/constants.js';
 
 const useStyles = makeStyles({
   card: {
@@ -19,19 +20,39 @@ const useStyles = makeStyles({
   cardIcon: {
     transform: "scale(1.2)",
     transition: "0.3s",
-    opacity: "75%",
     cursor: "pointer",
     "&:hover": {
-      opacity: "100%"
+      color: "green"
     }
   }
 });
 
 export default function ArticleCard(props) {
   const classes = useStyles();
+  const [liked, setLiked] = useState(props.article.liked);
+  const [likeCount, setLikeCount] = useState(props.article.likeCount);
 
-  const handleLikeClick = () => {
-    console.log("like");
+  const handleLikeClick = async () => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const response = await fetch(`${BASE_API_URL}${ENDPOINTS.NEWS}?articleId=${props.article.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        if (liked) {
+          setLikeCount(likeCount => likeCount - 1);
+        } else {
+          setLikeCount(likeCount => likeCount + 1);
+        }
+        setLiked((liked) => !liked);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleCommentClick = () => {
@@ -59,11 +80,21 @@ export default function ArticleCard(props) {
         </Typography>
       </CardContent>
       <Box display="flex" my={2} mx={3} gap={4} justifyContent="flex-end">
-        <Box onClick={handleLikeClick}>
-          <ThumbUpIcon className={classes.cardIcon} />
+        <Box display="flex" gap={2} alignItems="center" onClick={handleLikeClick}>
+          <Box>
+            <Typography fontWeight="bold">{likeCount} {likeCount === 1 ? "like" : "likes"}</Typography>
+          </Box>
+          <Box color={liked ? "green" : "initial"}>
+            <ThumbUpIcon className={classes.cardIcon} />
+          </Box>
         </Box>
-        <Box onClick={handleCommentClick}>
-          <ForumIcon className={classes.cardIcon} />
+        <Box display="flex" gap={1} alignItems="center" onClick={handleCommentClick}>
+          <Box>
+            <ForumIcon className={classes.cardIcon} />
+          </Box>
+          <Box>
+            <Typography>0</Typography>
+          </Box>
         </Box>
       </Box>
     </Card>

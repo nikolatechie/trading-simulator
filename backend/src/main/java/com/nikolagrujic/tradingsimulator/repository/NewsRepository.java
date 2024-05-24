@@ -14,4 +14,5 @@ public interface NewsRepository extends JpaRepository<NewsArticle, Long> {
     @Transactional
     void deleteAllByPublishedAtBefore(LocalDateTime publishedAt);
     Page<NewsArticle> findAll(Pageable pageable);
+    NewsArticle getById(Long id);
 }
