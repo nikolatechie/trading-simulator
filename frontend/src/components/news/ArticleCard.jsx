@@ -79,21 +79,21 @@ export default function ArticleCard(props) {
           {props.article.description}
         </Typography>
       </CardContent>
-      <Box display="flex" my={2} mx={3} gap={4} justifyContent="flex-end">
-        <Box display="flex" gap={2} alignItems="center" onClick={handleLikeClick}>
+      <Box display="flex" my={2} mx={3} gap={5} justifyContent="flex-end">
+        <Box display="flex" gap={2} alignItems="center">
           <Box>
-            <Typography fontWeight="bold">{likeCount} {likeCount === 1 ? "like" : "likes"}</Typography>
+            <Typography fontSize="0.9rem">{likeCount} {likeCount === 1 ? "like" : "likes"}</Typography>
           </Box>
-          <Box color={liked ? "green" : "initial"}>
+          <Box color={liked ? "green" : "initial"} onClick={handleLikeClick}>
             <ThumbUpIcon className={classes.cardIcon} />
           </Box>
         </Box>
-        <Box display="flex" gap={1} alignItems="center" onClick={handleCommentClick}>
-          <Box>
+        <Box display="flex" gap={2} alignItems="center">
+          <Box onClick={handleCommentClick}>
             <ForumIcon className={classes.cardIcon} />
           </Box>
           <Box>
-            <Typography>0</Typography>
+            <Typography fontSize="0.9rem">0</Typography>
           </Box>
         </Box>
       </Box>
