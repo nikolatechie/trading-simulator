@@ -9,6 +9,7 @@ import com.nikolagrujic.tradingsimulator.repository.ResetPasswordTokenRepository
 import com.nikolagrujic.tradingsimulator.repository.UserRepository;
 import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
 import com.nikolagrujic.tradingsimulator.response.JwtResponse;
+import com.nikolagrujic.tradingsimulator.response.UserDto;
 import com.nikolagrujic.tradingsimulator.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

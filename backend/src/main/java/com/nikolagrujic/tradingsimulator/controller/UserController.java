@@ -2,7 +2,7 @@ package com.nikolagrujic.tradingsimulator.controller;
 
 import com.nikolagrujic.tradingsimulator.model.LoginRequest;
 import com.nikolagrujic.tradingsimulator.model.ResetPasswordRequest;
-import com.nikolagrujic.tradingsimulator.model.UserDto;
+import com.nikolagrujic.tradingsimulator.response.UserDto;
 import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
 import com.nikolagrujic.tradingsimulator.service.UserService;
 import org.slf4j.Logger;

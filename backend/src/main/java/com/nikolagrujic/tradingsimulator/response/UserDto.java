@@ -1,4 +1,4 @@
-package com.nikolagrujic.tradingsimulator.model;
+package com.nikolagrujic.tradingsimulator.response;
 
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import lombok.AllArgsConstructor;

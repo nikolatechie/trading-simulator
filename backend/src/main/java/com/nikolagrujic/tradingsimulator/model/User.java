@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,4 +63,7 @@ public class User {
     public boolean hasLikedArticle(NewsArticle article) {
         return likedNewsArticles.contains(article);
     }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NewsArticleComment> comments = new ArrayList<>();
 }

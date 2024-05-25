@@ -5,11 +5,11 @@ import { formatDateTime } from "../../helpers/Helpers.jsx";
 import ForumIcon from "@mui/icons-material/Forum";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { BASE_API_URL, ENDPOINTS } from '../../data/constants.js';
+import CommentSection from './CommentSection.jsx';
 
 const useStyles = makeStyles({
   card: {
     width: "65%",
-    paddingBottom: 10,
     marginBottom: 30,
     borderRadius: 0,
     transition: "box-shadow 0.4s, background-color 0.3s, width 0.3s",
@@ -31,6 +31,8 @@ export default function ArticleCard(props) {
   const classes = useStyles();
   const [liked, setLiked] = useState(props.article.liked);
   const [likeCount, setLikeCount] = useState(props.article.likeCount);
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState(props.article.comments);
 
   const handleLikeClick = async () => {
     try {
@@ -53,11 +55,11 @@ export default function ArticleCard(props) {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const handleCommentClick = () => {
-    console.log("comment");
-  }
+    setShowComments(showComments => !showComments);
+  };
 
   return (
     <Card className={classes.card}>
@@ -78,25 +80,26 @@ export default function ArticleCard(props) {
         <Typography variant='body1' component='p'>
           {props.article.description}
         </Typography>
+        <Box display="flex" mt={4} mb={1} mx={2} gap={4} justifyContent="flex-end">
+          <Box display="flex" gap={1.5} alignItems="center">
+            <Box>
+              <Typography fontSize="0.9rem">{likeCount} {likeCount === 1 ? "like" : "likes"}</Typography>
+            </Box>
+            <Box color={liked ? "green" : "initial"} onClick={handleLikeClick}>
+              <ThumbUpIcon className={classes.cardIcon} />
+            </Box>
+          </Box>
+          <Box display="flex" gap={1.5} alignItems="center">
+            <Box color={showComments ? "green" : "initial"} onClick={handleCommentClick}>
+              <ForumIcon className={classes.cardIcon} />
+            </Box>
+            <Box>
+              <Typography fontSize="0.9rem">{comments.length} {comments.length === 1 ? "comment" : "comments"}</Typography>
+            </Box>
+          </Box>
+        </Box>
+        {showComments && <CommentSection comments={comments} />}
       </CardContent>
-      <Box display="flex" my={2} mx={3} gap={5} justifyContent="flex-end">
-        <Box display="flex" gap={2} alignItems="center">
-          <Box>
-            <Typography fontSize="0.9rem">{likeCount} {likeCount === 1 ? "like" : "likes"}</Typography>
-          </Box>
-          <Box color={liked ? "green" : "initial"} onClick={handleLikeClick}>
-            <ThumbUpIcon className={classes.cardIcon} />
-          </Box>
-        </Box>
-        <Box display="flex" gap={2} alignItems="center">
-          <Box onClick={handleCommentClick}>
-            <ForumIcon className={classes.cardIcon} />
-          </Box>
-          <Box>
-            <Typography fontSize="0.9rem">0</Typography>
-          </Box>
-        </Box>
-      </Box>
     </Card>
   );
 };
