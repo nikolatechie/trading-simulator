@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewsArticleCommentDto {
+    private Long articleId;
     private String content;
     private String author;
     private LocalDateTime postedDateTime;

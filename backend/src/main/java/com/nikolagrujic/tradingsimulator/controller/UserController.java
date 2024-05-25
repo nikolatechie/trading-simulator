@@ -36,6 +36,11 @@ public class UserController {
         }
     }
 
+    @GetMapping("/fullName")
+    public ResponseEntity<?> getUserFullName() {
+        return ResponseEntity.ok(userService.getFullName());
+    }
+
     @PatchMapping("/update")
     public ResponseEntity<?> updateUser(@Valid @RequestBody UserDto userDto) {
         try {

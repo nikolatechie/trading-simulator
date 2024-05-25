@@ -57,6 +57,10 @@ export default function ArticleCard(props) {
     }
   };
 
+  const addComment = (comment) => {
+    setComments([...comments, comment]);
+  }
+
   const handleCommentClick = () => {
     setShowComments(showComments => !showComments);
   };
@@ -98,7 +102,7 @@ export default function ArticleCard(props) {
             </Box>
           </Box>
         </Box>
-        {showComments && <CommentSection comments={comments} />}
+        {showComments && <CommentSection comments={comments} articleId={props.article.id} addComment={addComment} />}
       </CardContent>
     </Card>
   );

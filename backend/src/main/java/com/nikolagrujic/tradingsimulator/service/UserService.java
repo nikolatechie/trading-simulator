@@ -244,6 +244,14 @@ public class UserService implements UserDetailsService {
         return userRepository.getVerificationDate(email);
     }
 
+    public ObjectNode getFullName() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email);
+        ObjectNode fullName = objectMapper.createObjectNode();
+        fullName.put("fullName", user.getFirstName() + " " + user.getLastName());
+        return fullName;
+    }
+
     @Async
     @Scheduled(cron = "0 0 0 */10 * *")
     public void cleanupUsersAndTokens() {

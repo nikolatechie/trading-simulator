@@ -1,9 +1,13 @@
 package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.constants.Constants;
+import com.nikolagrujic.tradingsimulator.exception.InvalidArticleException;
 import com.nikolagrujic.tradingsimulator.mapper.NewsArticleMapper;
 import com.nikolagrujic.tradingsimulator.model.NewsArticle;
+import com.nikolagrujic.tradingsimulator.model.NewsArticleComment;
 import com.nikolagrujic.tradingsimulator.model.User;
+import com.nikolagrujic.tradingsimulator.repository.NewsArticleCommentRepository;
+import com.nikolagrujic.tradingsimulator.response.NewsArticleCommentDto;
 import com.nikolagrujic.tradingsimulator.response.NewsArticleDto;
 import com.nikolagrujic.tradingsimulator.response.NewsListResponse;
 import com.nikolagrujic.tradingsimulator.repository.NewsRepository;
@@ -32,6 +36,7 @@ import java.util.Objects;
 @Service
 public class NewsService {
     private final NewsRepository newsRepository;
+    private final NewsArticleCommentRepository commentRepository;
     private final UserService userService;
     @Value("${news.api.key}")
     private String apiKey;
@@ -43,9 +48,13 @@ public class NewsService {
     private static final long DELETE_OLD_NEWS_INITIAL_DELAY_MILLISECONDS = 10000;
 
     @Autowired
-    public NewsService(NewsRepository newsRepository, UserService userService) {
+    public NewsService(
+            NewsRepository newsRepository,
+            UserService userService,
+            NewsArticleCommentRepository commentRepository) {
         this.newsRepository = newsRepository;
         this.userService = userService;
+        this.commentRepository = commentRepository;
     }
 
     @Async
@@ -134,5 +143,21 @@ public class NewsService {
         }
 
         return new PageImpl<>(articlesDto, articles.getPageable(), articles.getTotalElements());
+    }
+
+    public void addComment(NewsArticleCommentDto commentDto) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long articleId = commentDto.getArticleId();
+        LOGGER.info("[{}] Adding a comment to a news article: {}", email, articleId);
+        NewsArticle article = newsRepository.getById(articleId);
+        if (article == null) {
+            throw new InvalidArticleException("Article with id " + articleId + " does not exist.");
+        }
+        NewsArticleComment newComment = new NewsArticleComment();
+        newComment.setContent(commentDto.getContent());
+        newComment.setUser(userService.findByEmail(email));
+        newComment.setArticle(article);
+        newComment.setPostedDateTime(LocalDateTime.now());
+        commentRepository.save(newComment);
     }
 }

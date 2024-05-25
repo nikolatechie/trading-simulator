@@ -47,6 +47,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(400).body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(InvalidArticleException.class)
+    public ResponseEntity<?> handleInvalidArticleException(InvalidArticleException e) {
+        LOGGER.error(e.getMessage());
+        return ResponseEntity.status(400).body(new ErrorResponse(e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
         // Default exception

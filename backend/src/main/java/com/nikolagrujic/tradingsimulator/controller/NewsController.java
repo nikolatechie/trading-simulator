@@ -1,6 +1,7 @@
 package com.nikolagrujic.tradingsimulator.controller;
 
 import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
+import com.nikolagrujic.tradingsimulator.response.NewsArticleCommentDto;
 import com.nikolagrujic.tradingsimulator.response.NewsArticleDto;
 import com.nikolagrujic.tradingsimulator.service.NewsService;
 import org.slf4j.Logger;
@@ -46,6 +47,12 @@ public class NewsController {
     @PostMapping
     public ResponseEntity<?> flipLike(@RequestParam Long articleId) {
         newsService.flipLike(articleId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/comment")
+    public ResponseEntity<?> addComment(@RequestBody NewsArticleCommentDto commentDto) {
+        newsService.addComment(commentDto);
         return ResponseEntity.ok().build();
     }
 }
