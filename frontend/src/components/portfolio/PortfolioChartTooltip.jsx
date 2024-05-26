@@ -17,4 +17,5 @@ export const PortfolioChartTooltip = ({ active, payload }) => {
       </Card>
     );
   }
+  return null;
 };

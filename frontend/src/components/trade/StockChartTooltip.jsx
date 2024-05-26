@@ -17,4 +17,5 @@ export const StockChartTooltip = ({ active, payload }) => {
       </Card>
     );
   }
+  return null;
 };
