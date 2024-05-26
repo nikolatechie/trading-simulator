@@ -4,7 +4,7 @@ Trading Simulator is a web application developed using **Java Spring Boot**, **R
 
 ## Features
 
-1. **User Authentication**: Users can register and log in to the application. Upon registration, users receive a confirmation email to verify their account.
+1. **User Authentication**: Users can register and log in to the application. Upon registration, users receive a confirmation email to verify their account. Furthermore, there is an option to reset password via email.
 
 2. **Dashboard**: Provides a quick overview of the user's trading activities and recommendations. It displays basic information and summary statistics to give users a glance at their portfolio performance.
 
@@ -12,11 +12,11 @@ Trading Simulator is a web application developed using **Java Spring Boot**, **R
 
 4. **Trade**: Allows users to explore and trade stocks. Users can search for specific stocks by symbol or name. Upon selecting a stock, detailed information is provided such as price, bid/ask price, day's high/low, volume, a price chart etc. Users can choose the desired time range for the chart (**1D**, **1M**, **6M**, **1Y**, **5Y**, or **MAX**). A trade form enables users to initiate trades by selecting the quantity, order type, and order duration.
 
-5. **News**: Provides financial news related to stocks. Users can stay updated with the latest news and developments in the financial markets.
+5. **News**: Provides financial news related to stocks. Users can stay updated with the latest news and developments in the financial markets. Additionally, users can interact with news articles by liking articles or posting comments.
 
 6. **Transactions**: Displays a history of all the transactions made by the user, including all trades. Users can review their transaction history to track their trading activities.
 
-7. **Settings**: Allows users to modify their basic account settings, such as changing their name or password.
+7. **Settings**: Allows users to modify their basic account settings, such as changing their name or password, or delete their account.
 
 ## Screenshots
 
