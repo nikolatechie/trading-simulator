@@ -2,11 +2,10 @@ package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.exception.UserNotRegisteredException;
 import com.nikolagrujic.tradingsimulator.exception.UserNotVerifiedException;
-import com.nikolagrujic.tradingsimulator.model.JwtCheck;
-import com.nikolagrujic.tradingsimulator.response.JwtResponse;
-import com.nikolagrujic.tradingsimulator.model.LoginRequest;
+import com.nikolagrujic.tradingsimulator.dto.JwtDto;
+import com.nikolagrujic.tradingsimulator.dto.LoginRequest;
 import com.nikolagrujic.tradingsimulator.model.User;
-import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
+import com.nikolagrujic.tradingsimulator.dto.ErrorResponse;
 import com.nikolagrujic.tradingsimulator.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class AuthService {
         try {
             checkUserForLogin(user, loginRequest);
             handleAuthentication(loginRequest);
-            return ResponseEntity.ok(new JwtResponse(jwtUtil.generateJwt(loginRequest.getEmail())));
+            return ResponseEntity.ok(new JwtDto(jwtUtil.generateJwt(loginRequest.getEmail())));
         } catch (UserNotVerifiedException e) {
             handleUserNotVerified(user);
             return ResponseEntity.status(401).body(new ErrorResponse("Email hasn't been verified!"));
@@ -83,8 +82,8 @@ public class AuthService {
         emailVerificationService.createAndSendVerificationToken(user); // Send new token
     }
 
-    public ResponseEntity<?> checkJwtForExpiry(JwtCheck jwtCheck) {
-        String jwt = jwtCheck.getJwt();
+    public ResponseEntity<?> checkJwtForExpiry(JwtDto jwtDto) {
+        String jwt = jwtDto.getJwt();
         if (jwt == null || jwtUtil.isJwtExpired(jwt)) {
             return ResponseEntity.status(401).body(
                 new ErrorResponse("Invalid JWT")

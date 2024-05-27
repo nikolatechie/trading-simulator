@@ -1,7 +1,7 @@
 package com.nikolagrujic.tradingsimulator.controller;
 
 import com.nikolagrujic.tradingsimulator.model.Transaction;
-import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
+import com.nikolagrujic.tradingsimulator.dto.ErrorResponse;
 import com.nikolagrujic.tradingsimulator.service.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

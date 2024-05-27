@@ -1,4 +1,4 @@
-package com.nikolagrujic.tradingsimulator.model;
+package com.nikolagrujic.tradingsimulator.dto;
 
 import lombok.Getter;
 

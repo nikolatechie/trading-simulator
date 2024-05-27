@@ -1,6 +1,6 @@
-package com.nikolagrujic.tradingsimulator.response;
+package com.nikolagrujic.tradingsimulator.dto;
 
-import com.nikolagrujic.tradingsimulator.model.NewsArticle;
+import com.nikolagrujic.tradingsimulator.model.StockInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class NewsListResponse {
-    private List<NewsArticle> articles;
+public class StocksListResponse {
+    private List<StockInfo> data;
 }

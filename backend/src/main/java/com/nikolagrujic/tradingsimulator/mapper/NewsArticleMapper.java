@@ -3,8 +3,8 @@ package com.nikolagrujic.tradingsimulator.mapper;
 import com.nikolagrujic.tradingsimulator.model.NewsArticle;
 import com.nikolagrujic.tradingsimulator.model.NewsArticleComment;
 import com.nikolagrujic.tradingsimulator.model.User;
-import com.nikolagrujic.tradingsimulator.response.NewsArticleCommentDto;
-import com.nikolagrujic.tradingsimulator.response.NewsArticleDto;
+import com.nikolagrujic.tradingsimulator.dto.NewsArticleCommentDto;
+import com.nikolagrujic.tradingsimulator.dto.NewsArticleDto;
 
 import java.util.ArrayList;
 import java.util.List;

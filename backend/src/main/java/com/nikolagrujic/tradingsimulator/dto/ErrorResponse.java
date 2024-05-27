@@ -1,4 +1,4 @@
-package com.nikolagrujic.tradingsimulator.response;
+package com.nikolagrujic.tradingsimulator.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

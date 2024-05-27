@@ -1,6 +1,6 @@
 package com.nikolagrujic.tradingsimulator.exception;
 
-import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
+import com.nikolagrujic.tradingsimulator.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

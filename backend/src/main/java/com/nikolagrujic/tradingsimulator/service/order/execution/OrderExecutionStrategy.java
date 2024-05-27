@@ -1,7 +1,7 @@
 package com.nikolagrujic.tradingsimulator.service.order.execution;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.nikolagrujic.tradingsimulator.model.TradeOrder;
+import com.nikolagrujic.tradingsimulator.dto.TradeOrder;
 import java.math.BigDecimal;
 
 public interface OrderExecutionStrategy {

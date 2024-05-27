@@ -1,8 +1,8 @@
 package com.nikolagrujic.tradingsimulator.controller;
 
-import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
-import com.nikolagrujic.tradingsimulator.response.NewsArticleCommentDto;
-import com.nikolagrujic.tradingsimulator.response.NewsArticleDto;
+import com.nikolagrujic.tradingsimulator.dto.ErrorResponse;
+import com.nikolagrujic.tradingsimulator.dto.NewsArticleCommentDto;
+import com.nikolagrujic.tradingsimulator.dto.NewsArticleDto;
 import com.nikolagrujic.tradingsimulator.service.NewsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

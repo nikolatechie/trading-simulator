@@ -1,4 +1,4 @@
-package com.nikolagrujic.tradingsimulator.response;
+package com.nikolagrujic.tradingsimulator.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TodayChange {
-    private BigDecimal valueChange;
-    private double percentageChange;
+public class PortfolioStatsResponse {
+    private BigDecimal totalValue;
+    private BigDecimal totalGainOrLoss;
 }

@@ -6,7 +6,7 @@ import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.exception.InvalidOrderException;
 import com.nikolagrujic.tradingsimulator.model.Portfolio;
 import com.nikolagrujic.tradingsimulator.model.StockHolding;
-import com.nikolagrujic.tradingsimulator.model.TradeOrder;
+import com.nikolagrujic.tradingsimulator.dto.TradeOrder;
 import com.nikolagrujic.tradingsimulator.repository.StockHoldingRepository;
 import com.nikolagrujic.tradingsimulator.service.PortfolioService;
 import org.slf4j.Logger;

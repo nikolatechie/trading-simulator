@@ -1,4 +1,4 @@
-package com.nikolagrujic.tradingsimulator.response;
+package com.nikolagrujic.tradingsimulator.dto;
 
 import com.nikolagrujic.tradingsimulator.model.StockHolding;
 import lombok.AllArgsConstructor;

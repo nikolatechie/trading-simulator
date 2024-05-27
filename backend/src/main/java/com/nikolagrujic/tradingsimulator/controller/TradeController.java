@@ -1,8 +1,8 @@
 package com.nikolagrujic.tradingsimulator.controller;
 
 import com.nikolagrujic.tradingsimulator.exception.InvalidOrderException;
-import com.nikolagrujic.tradingsimulator.model.TradeOrder;
-import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
+import com.nikolagrujic.tradingsimulator.dto.TradeOrder;
+import com.nikolagrujic.tradingsimulator.dto.ErrorResponse;
 import com.nikolagrujic.tradingsimulator.service.TradeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

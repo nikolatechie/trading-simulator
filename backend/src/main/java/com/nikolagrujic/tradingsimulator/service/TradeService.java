@@ -7,7 +7,7 @@ import com.nikolagrujic.tradingsimulator.model.Transaction;
 import com.nikolagrujic.tradingsimulator.service.order.execution.MarketOrderExecutionStrategy;
 import com.nikolagrujic.tradingsimulator.service.order.execution.OrderExecutionStrategy;
 import com.nikolagrujic.tradingsimulator.model.Portfolio;
-import com.nikolagrujic.tradingsimulator.model.TradeOrder;
+import com.nikolagrujic.tradingsimulator.dto.TradeOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

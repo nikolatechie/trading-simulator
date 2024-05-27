@@ -3,7 +3,7 @@ package com.nikolagrujic.tradingsimulator.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nikolagrujic.tradingsimulator.model.StockHolding;
-import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
+import com.nikolagrujic.tradingsimulator.dto.ErrorResponse;
 import com.nikolagrujic.tradingsimulator.service.PortfolioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

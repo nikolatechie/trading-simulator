@@ -3,13 +3,12 @@ package com.nikolagrujic.tradingsimulator.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nikolagrujic.tradingsimulator.constants.Constants;
+import com.nikolagrujic.tradingsimulator.dto.*;
+import com.nikolagrujic.tradingsimulator.event.ResetPasswordEvent;
 import com.nikolagrujic.tradingsimulator.exception.*;
 import com.nikolagrujic.tradingsimulator.model.*;
 import com.nikolagrujic.tradingsimulator.repository.ResetPasswordTokenRepository;
 import com.nikolagrujic.tradingsimulator.repository.UserRepository;
-import com.nikolagrujic.tradingsimulator.response.ErrorResponse;
-import com.nikolagrujic.tradingsimulator.response.JwtResponse;
-import com.nikolagrujic.tradingsimulator.response.UserDto;
 import com.nikolagrujic.tradingsimulator.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +106,7 @@ public class UserService implements UserDetailsService {
         return userInfo;
     }
 
-    public JwtResponse updateUser(UserDto userDto) throws RuntimeException {
+    public JwtDto updateUser(UserDto userDto) throws RuntimeException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         LOGGER.info("Updating user info: {}", email);
         User user = userRepository.findByEmail(email);
@@ -127,7 +126,7 @@ public class UserService implements UserDetailsService {
                 user.setPassword(passwordEncoder.encode(userDto.getNewPassword()));
             }
             userRepository.save(user);
-            return new JwtResponse(jwtUtil.generateJwt(email));
+            return new JwtDto(jwtUtil.generateJwt(email));
         }
         else throw new UserNotRegisteredException("Couldn't retrieve the user.", null);
     }

@@ -1,6 +1,7 @@
 package com.nikolagrujic.tradingsimulator.service;
 
 import com.nikolagrujic.tradingsimulator.constants.Constants;
+import com.nikolagrujic.tradingsimulator.event.VerifyEmailEvent;
 import com.nikolagrujic.tradingsimulator.exception.InvalidTokenException;
 import com.nikolagrujic.tradingsimulator.model.EmailVerificationToken;
 import com.nikolagrujic.tradingsimulator.model.User;
@@ -12,6 +13,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,7 +62,7 @@ public class EmailVerificationService {
         mailMessage.setTo(user.getEmail());
         mailMessage.setSubject("Verify email to access Trading Simulator");
         mailMessage.setText(createEmailText(user, token.getToken()));
-        eventPublisher.publishEvent(mailMessage);
+        eventPublisher.publishEvent(new VerifyEmailEvent(mailMessage));
     }
 
     private EmailVerificationToken createToken(User user) {
@@ -81,12 +83,16 @@ public class EmailVerificationService {
 
     /**
      * Event listener that sends a verification token by email. Should NOT be called manually!
-     * @param mailMessage object containing data about sender, receiver, subject etc.
+     * @param event object containing data about sender, receiver, subject etc.
      */
+    @Async
     @EventListener
-    public void sendEmailForVerification(SimpleMailMessage mailMessage) {
-        LOGGER.info("Sending a verification email to {}", Objects.requireNonNull(mailMessage.getTo())[0]);
-        mailSender.send(mailMessage);
+    public void sendEmailForVerification(VerifyEmailEvent event) {
+        LOGGER.info(
+            "Sending a verification email to {}",
+            Objects.requireNonNull(event.getSimpleMailMessage().getTo())[0]
+        );
+        mailSender.send(event.getSimpleMailMessage());
     }
 
     public List<EmailVerificationToken> getAllTokensToBeRemoved() {

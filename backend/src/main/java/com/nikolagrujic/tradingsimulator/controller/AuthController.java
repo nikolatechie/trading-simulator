@@ -1,7 +1,7 @@
 package com.nikolagrujic.tradingsimulator.controller;
 
-import com.nikolagrujic.tradingsimulator.model.JwtCheck;
-import com.nikolagrujic.tradingsimulator.model.LoginRequest;
+import com.nikolagrujic.tradingsimulator.dto.JwtDto;
+import com.nikolagrujic.tradingsimulator.dto.LoginRequest;
 import com.nikolagrujic.tradingsimulator.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +28,8 @@ public class AuthController {
     }
 
     @PostMapping(path = "/check-jwt-expiry")
-    public ResponseEntity<?> checkJwtForExpiry(@RequestBody JwtCheck jwtCheck) {
-        LOGGER.info("Checking JWT for expiry: {}", jwtCheck.getJwt());
-        return authService.checkJwtForExpiry(jwtCheck);
+    public ResponseEntity<?> checkJwtForExpiry(@RequestBody JwtDto jwtDto) {
+        LOGGER.info("Checking JWT for expiry: {}", jwtDto.getJwt());
+        return authService.checkJwtForExpiry(jwtDto);
     }
 }

@@ -3,7 +3,7 @@ package com.nikolagrujic.tradingsimulator.service;
 import com.nikolagrujic.tradingsimulator.constants.Constants;
 import com.nikolagrujic.tradingsimulator.model.Transaction;
 import com.nikolagrujic.tradingsimulator.repository.TransactionRepository;
-import com.nikolagrujic.tradingsimulator.response.TransactionsStatsResponse;
+import com.nikolagrujic.tradingsimulator.dto.TransactionsStatsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
